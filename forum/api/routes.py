@@ -1,7 +1,7 @@
 from fastapi.routing import APIRoute
 
 from forum.api.models import (UserIdResponse, OkResponse, UserListResponse,
-                              UserResponse)
+                              UserResponse, User)
 from forum.api.views.friendship import befriend
 from forum.api.views.user import (create_user, edit_user, get_all_users,
                                   get_user)
@@ -9,10 +9,10 @@ from forum.api.views.user import (create_user, edit_user, get_all_users,
 ROUTES = [
     APIRoute("/user", create_user, response_model=UserIdResponse, methods=["POST"]),
     APIRoute(
-        "/user/list", get_all_users, response_model=UserListResponse, methods=["GET"]
+        "/user/list", get_all_users, response_model=list[User], methods=["GET"]
     ),
     APIRoute(
-        "/user/id{user_id}", get_user, response_model=UserResponse, methods=["GET"]
+        "/user/id{user_id}", get_user, response_model=User | None, methods=["GET"]
     ),
     APIRoute("/user", edit_user, response_model=OkResponse, methods=["PUT"]),
 

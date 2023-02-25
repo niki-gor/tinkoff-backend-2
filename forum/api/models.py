@@ -66,3 +66,20 @@ class Friendship(BaseModel):
     def make_sorted(cls, values):
         values["first_id"], values["second_id"] = sorted([values["first_id"], values["second_id"]])
         return values
+
+
+class FriendshipRequest(BaseModel):
+    from_id: int
+    to_id: int
+
+    @validator("from_id", "to_id")
+    def id_is_ok(cls, v):
+        if v < 0:
+            raise ValueError("expected user_id > 0")
+        return v
+
+    @root_validator
+    def first_not_eq_second(cls, values):
+        if values["from_id"] == values["to_id"]:
+            raise ValueError("friends IDs should be different")
+        return values

@@ -10,14 +10,14 @@ async def create_user(user: UserInfo, users: BaseUserManager = Depends(users_tab
     return UserIdResponse(user_id=new_id)
 
 
-async def get_all_users(users : BaseUserManager = Depends(users_table)) -> UserListResponse:
+async def get_all_users(users : BaseUserManager = Depends(users_table)) -> list[User]:
     all_users = await users.select_all()
-    return UserListResponse(users=all_users)
+    return all_users
 
 
-async def get_user(user_id: int, users: BaseUserManager = Depends(users_table)) -> UserResponse:
+async def get_user(user_id: int, users: BaseUserManager = Depends(users_table)) -> User | None:
     user = await users.select_by_id(user_id)
-    return UserResponse(user=user)
+    return user
 
 
 async def edit_user(user: User, users: BaseUserManager = Depends(users_table)) -> OkResponse:
