@@ -1,4 +1,6 @@
 from fastapi.routing import APIRoute
+from fastapi import Response
+from fastapi.responses import JSONResponse
 
 from forum.api.models import (UserIdResponse, OkResponse, UserListResponse,
                               UserResponse, User)
@@ -12,7 +14,7 @@ ROUTES = [
         "/user/list", get_all_users, response_model=list[User], methods=["GET"]
     ),
     APIRoute(
-        "/user/id{user_id}", get_user, response_model=User | None, methods=["GET"]
+        "/user/id{user_id}", get_user, methods=["GET"]
     ),
     APIRoute("/user", edit_user, response_model=OkResponse, methods=["PUT"]),
 
