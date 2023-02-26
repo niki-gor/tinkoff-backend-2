@@ -30,22 +30,6 @@ class User(UserInfo):
     user_id: int
 
 
-class UserResponse(BaseModel):
-    user: User | None
-
-
-class UserListResponse(BaseModel):
-    users: list[User]
-
-
-class OkResponse(BaseModel):
-    ok: bool
-
-
-class UserIdResponse(BaseModel):
-    user_id: int
-
-
 class Friendship(BaseModel):
     first_id: int
     second_id: int
@@ -66,20 +50,4 @@ class Friendship(BaseModel):
     def make_sorted(cls, values):
         values["first_id"], values["second_id"] = sorted([values["first_id"], values["second_id"]])
         return values
-
-
-class FriendshipRequest(BaseModel):
-    from_id: int
-    to_id: int
-
-    @validator("from_id", "to_id")
-    def id_is_ok(cls, v):
-        if v < 0:
-            raise ValueError("expected user_id > 0")
-        return v
-
-    @root_validator
-    def first_not_eq_second(cls, values):
-        if values["from_id"] == values["to_id"]:
-            raise ValueError("friends IDs should be different")
-        return values
+        
