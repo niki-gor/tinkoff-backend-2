@@ -1,4 +1,4 @@
-from fastapi import Depends, Query, status, Response
+from fastapi import Depends, status, Response
 
 from forum.repository import users_table, friendship_table
 from forum.repository.abc import BaseUserRepository, BaseFriendshipRepository
@@ -6,9 +6,9 @@ from forum.api.models import Friendship, EmptyBody, Error
 
 
 async def befriend(
+    from_id: int,
+    to_id: int,
     r: Response,
-    from_id: int = Query(),
-    to_id: int = Query(),
     users: BaseUserRepository = Depends(users_table),
     friendships: BaseFriendshipRepository = Depends(friendship_table),
 ) -> Error | EmptyBody:

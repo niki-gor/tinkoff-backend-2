@@ -9,5 +9,5 @@ ROUTES = [
     APIRoute("/users", get_all_users, response_model = list[User], methods=["GET"]),
     APIRoute("/users/{user_id}", get_user, response_model = UserInfo | Error, methods=["GET"]),
     APIRoute("/users/{user_id}", edit_user, response_model = Error | EmptyBody, methods=["PUT"]),
-    APIRoute("/friends", befriend, response_model = Error | EmptyBody, methods=["PUT"]),
+    APIRoute("/users/{from_id}/friends/{to_id}", befriend, response_model = Error | EmptyBody, methods=["PUT"]),
 ]
