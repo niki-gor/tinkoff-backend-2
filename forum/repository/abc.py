@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from forum.api.models import User, UserInfo, Friendship
 
 
-class BaseUserManager(ABC):
+class BaseUserRepository(ABC):
     @abstractmethod
-    async def insert(self, ui: UserInfo) -> int:
+    async def insert(self, user_info: UserInfo) -> int:
         pass
 
     @abstractmethod
@@ -13,15 +13,15 @@ class BaseUserManager(ABC):
         pass
 
     @abstractmethod
-    async def select_by_id(self, user_id: int) -> User | None:
+    async def select_by_id(self, user_id: int) -> UserInfo | None:
         pass
 
     @abstractmethod
-    async def update(self, u: User) -> bool:
+    async def update(self, user_id: int, user_info: UserInfo) -> bool:
         pass
 
 
-class BaseFriendshipManager(ABC):
+class BaseFriendshipRepository(ABC):
     @abstractmethod
     async def insert(self, friendship: Friendship) -> bool:
         pass

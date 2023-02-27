@@ -30,6 +30,23 @@ class User(UserInfo):
     user_id: int
 
 
+class UserId(BaseModel):
+    user_id: int
+
+
+class Error(BaseModel):
+    detail: str
+
+
+class EmptyBody(BaseModel):
+    '''
+    NB: EmptyBody всегда должен стоять в конце перечислений Type1 | ... | TypeN | EmptyBody.
+    Тело пустое => EmptyBody соответствует любой словарь. 
+    Из-за механики работы Pydantic, все словари из-за этого кастятся к EmptyBody — пустому словарю
+    '''
+    pass
+
+
 class Friendship(BaseModel):
     first_id: int
     second_id: int
