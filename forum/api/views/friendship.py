@@ -1,6 +1,6 @@
 from fastapi import Depends, status, Response
 
-from forum.repository import users_table, friendship_table
+from forum.repository import users_repo, friendships_repo
 from forum.repository.abc import BaseUserRepository, BaseFriendshipRepository
 from forum.api.models import Friendship, EmptyBody, Error
 
@@ -9,8 +9,8 @@ async def befriend(
     from_id: int,
     to_id: int,
     r: Response,
-    users: BaseUserRepository = Depends(users_table),
-    friendships: BaseFriendshipRepository = Depends(friendship_table),
+    users: BaseUserRepository = Depends(users_repo),
+    friendships: BaseFriendshipRepository = Depends(friendships_repo),
 ) -> Error | EmptyBody:
     for user_id in [from_id, to_id]:
         user = await users.select_by_id(user_id)

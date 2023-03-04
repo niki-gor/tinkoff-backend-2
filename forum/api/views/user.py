@@ -1,6 +1,6 @@
 from fastapi import Depends, status, Response
 
-from forum.repository import users_table
+from forum.repository import users_repo
 from forum.repository.abc import BaseUserRepository
 from forum.api.models import UserInfo, User, Error, EmptyBody, UserId
 
@@ -8,7 +8,7 @@ from forum.api.models import UserInfo, User, Error, EmptyBody, UserId
 async def create_user(
     user_info: UserInfo, 
     r: Response,
-    users: BaseUserRepository = Depends(users_table),
+    users: BaseUserRepository = Depends(users_repo),
 ) -> UserId:
     new_id = await users.insert(user_info)
     r.status_code = status.HTTP_201_CREATED
@@ -16,7 +16,7 @@ async def create_user(
 
 
 async def get_all_users(
-    users : BaseUserRepository = Depends(users_table)
+    users : BaseUserRepository = Depends(users_repo)
 ) -> list[User]:
     all_users = await users.select_all()
     return all_users
@@ -25,7 +25,7 @@ async def get_all_users(
 async def get_user(
     user_id: int, 
     r: Response,
-    users: BaseUserRepository = Depends(users_table)
+    users: BaseUserRepository = Depends(users_repo)
 ) -> UserInfo | Error:
     user_info = await users.select_by_id(user_id)
     if user_info is None:
@@ -38,7 +38,7 @@ async def edit_user(
     user_id: int,
     user_info: UserInfo,
     r: Response,
-    users: BaseUserRepository = Depends(users_table)
+    users: BaseUserRepository = Depends(users_repo)
 ) -> Error | EmptyBody:
     ok = await users.update(user_id, user_info)
     if not ok:

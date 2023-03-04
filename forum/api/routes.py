@@ -1,4 +1,5 @@
 from fastapi.routing import APIRoute
+from fastapi import APIRouter
 
 from forum.api.models import User, UserInfo, Error, EmptyBody, UserId
 from forum.api.views.friendship import befriend
