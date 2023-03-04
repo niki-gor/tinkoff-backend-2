@@ -1,10 +1,6 @@
-from functools import lru_cache
+from forum.repository.memory import (MemoryFriendshipRepository,
+                                     MemoryUserRepository)
 
-from forum.repository.memory import MemoryFriendshipRepository, MemoryUserRepository
+users_repo = MemoryUserRepository()
 
-
-_users_repo = MemoryUserRepository()
-users_repo = lambda: _users_repo
-
-_friendships_repo = MemoryFriendshipRepository()
-friendships_repo = lambda: _friendships_repo
+friendships_repo = MemoryFriendshipRepository()

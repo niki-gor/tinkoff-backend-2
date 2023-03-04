@@ -3,7 +3,12 @@ from abc import ABC, abstractmethod
 from forum.api.models import User, UserInfo, Friendship
 
 
-class BaseUserRepository(ABC):
+class BaseRepository(ABC):
+    def __call__(self):
+        return self
+
+
+class BaseUserRepository(BaseRepository):
     @abstractmethod
     async def insert(self, user_info: UserInfo) -> int:
         pass
@@ -21,7 +26,7 @@ class BaseUserRepository(ABC):
         pass
 
 
-class BaseFriendshipRepository(ABC):
+class BaseFriendshipRepository(BaseRepository):
     @abstractmethod
     async def insert(self, friendship: Friendship) -> bool:
         pass

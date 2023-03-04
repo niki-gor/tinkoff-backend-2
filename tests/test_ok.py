@@ -13,11 +13,8 @@ app = FastAPI()
 app.include_router(router)
 
 
-def make_func(obj):
-    return lambda: obj
-
 def test_post():
-    app.dependency_overrides[users_repo] = make_func(MemoryUserRepository())
+    app.dependency_overrides[users_repo] = MemoryUserRepository()
     client = TestClient(app)
 
     user_mock = UserInfo(name='lol', about='literally nothing', age=42, email='lol@tinkoff.ru')
@@ -26,7 +23,7 @@ def test_post():
 
 
 def test_empty():
-    app.dependency_overrides[users_repo] = make_func(MemoryUserRepository())
+    app.dependency_overrides[users_repo] = MemoryUserRepository()
     client = TestClient(app)
 
     response = client.get('/users')
