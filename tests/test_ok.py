@@ -1,33 +1,13 @@
 from copy import deepcopy
 
-import pytest
-from fastapi import FastAPI, status
-from fastapi.testclient import TestClient
+from fastapi import status
 
-from forum.api import router
-from forum.api.models import User, UserInfo
-from forum.repository import friendships_repo, users_repo
-from forum.repository.memory import (MemoryFriendshipRepository,
-                                     MemoryUserRepository)
-
-app = FastAPI()
-app.include_router(router)
-client = TestClient(app)
-user_mock = UserInfo(
-    name="lol", about="literally nothing", age=42, email="lol@tinkoff.ru"
-)
-
-
-@pytest.fixture
-def new_app():
-    app.dependency_overrides[users_repo] = MemoryUserRepository()
-    app.dependency_overrides[friendships_repo] = MemoryFriendshipRepository()
-    yield app
-    app.dependency_overrides = {}
+from forum.api.models import User
+from tests.common import client, user_mock, new_app
 
 
 def test_create_user(new_app):
-    response = client.post("/users", content=user_mock.json())
+    response = client.post("/users", json=user_mock.dict())
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json() == {"user_id": 1}
 
@@ -37,8 +17,8 @@ def test_get_all_users(new_app):
     assert response.json() == []
     assert response.status_code == status.HTTP_200_OK
 
-    response = client.post("/users", content=user_mock.json())
-    response = client.post("/users", content=user_mock.json())
+    response = client.post("/users", json=user_mock.dict())
+    response = client.post("/users", json=user_mock.dict())
 
     response = client.get("/users")
     assert response.json() == [
@@ -48,7 +28,7 @@ def test_get_all_users(new_app):
 
 
 def test_get_user(new_app):
-    response = client.post("/users", content=user_mock.json())
+    response = client.post("/users", json=user_mock.dict())
 
     response = client.get("/users/1")
     assert response.status_code == status.HTTP_200_OK
@@ -56,7 +36,7 @@ def test_get_user(new_app):
 
 
 def test_edit_user(new_app):
-    response = client.post("/users", content=user_mock.json())
+    response = client.post("/users", json=user_mock.dict())
 
     change = deepcopy(user_mock)
     change.about = user_mock.about + " difference"
@@ -69,8 +49,8 @@ def test_edit_user(new_app):
 
 
 def test_make_friendship(new_app):
-    response = client.post("/users", content=user_mock.json())
-    response = client.post("/users", content=user_mock.json())
+    response = client.post("/users", json=user_mock.dict())
+    response = client.post("/users", json=user_mock.dict())
 
     response = client.put('/users/1/friends/2')
     assert response.status_code == status.HTTP_201_CREATED

@@ -40,9 +40,11 @@ class Error(BaseModel):
 
 class EmptyBody(BaseModel):
     '''
-    NB: EmptyBody всегда должен стоять в конце перечислений Type1 | ... | TypeN | EmptyBody.
-    Тело пустое => EmptyBody соответствует любой словарь. 
-    Из-за механики работы Pydantic, все словари из-за этого кастятся к EmptyBody — пустому словарю
+    NB: EmptyBody всегда должен стоять в конце объединения типов Type1 | ... | TypeN | EmptyBody
+
+    Тело пустое => EmptyBody соответствует любой словарь.
+    Поэтому, чтобы не возникло преждевременного type-match, 
+    EmptyBody должен стоять в конце объединений типов.
     '''
     pass
 

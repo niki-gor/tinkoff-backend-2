@@ -1,12 +1,13 @@
-from fastapi import Depends, status, Response
+from fastapi import Depends, Response, status
 
+from forum.api.errors import ErrUserNotFound
+from forum.api.models import EmptyBody, Error, User, UserId, UserInfo
 from forum.repository import users_repo
 from forum.repository.abc import BaseUserRepository
-from forum.api.models import UserInfo, User, Error, EmptyBody, UserId
 
 
 async def create_user(
-    user_info: UserInfo, 
+    user_info: UserInfo,
     r: Response,
     users: BaseUserRepository = Depends(users_repo),
 ) -> UserId:
@@ -15,22 +16,18 @@ async def create_user(
     return UserId(user_id=new_id)
 
 
-async def get_all_users(
-    users : BaseUserRepository = Depends(users_repo)
-) -> list[User]:
+async def get_all_users(users: BaseUserRepository = Depends(users_repo)) -> list[User]:
     all_users = await users.select_all()
     return all_users
 
 
 async def get_user(
-    user_id: int, 
-    r: Response,
-    users: BaseUserRepository = Depends(users_repo)
+    user_id: int, r: Response, users: BaseUserRepository = Depends(users_repo)
 ) -> UserInfo | Error:
     user_info = await users.select_by_id(user_id)
     if user_info is None:
         r.status_code = status.HTTP_404_NOT_FOUND
-        return Error(detail=f"User with id {user_id} not found")
+        return ErrUserNotFound
     return user_info
 
 
@@ -38,10 +35,10 @@ async def edit_user(
     user_id: int,
     user_info: UserInfo,
     r: Response,
-    users: BaseUserRepository = Depends(users_repo)
+    users: BaseUserRepository = Depends(users_repo),
 ) -> Error | EmptyBody:
     ok = await users.update(user_id, user_info)
     if not ok:
-        r.status_code = status.HTTP_400_BAD_REQUEST
-        return Error(detail=f"User with id {user_id} not found")
+        r.status_code = status.HTTP_404_NOT_FOUND
+        return ErrUserNotFound
     return {}
