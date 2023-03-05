@@ -1,9 +1,6 @@
-from copy import deepcopy
-
 from fastapi import status
 
-from forum.api.errors import ErrAlreadyFriends, ErrUserNotFound
-from forum.api.models import Error, User
+from forum.resources import strings
 from tests.common import client, new_app, user_mock
 
 
@@ -34,7 +31,7 @@ def test_create_user_fail(new_app):
 def test_get_user_fail(new_app):
     response = client.get("/users/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert Error(**response.json()) == ErrUserNotFound
+    assert response.json()['detail'] == strings.USER_NOT_FOUND
 
     response = client.get("/users/definitely_not_an_id")
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -45,7 +42,7 @@ def test_edit_user_fail(new_app):
 
     response = client.put("/users/2", json=user_mock.dict())
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert Error(**response.json()) == ErrUserNotFound
+    assert response.json()['detail'] == strings.USER_NOT_FOUND
 
     bad_user = {**user_mock.dict(), "age": 1337}
     response = client.put("/users/1", json=bad_user)
@@ -62,8 +59,8 @@ def test_make_friendship_fail(new_app):
 
     response = client.put("/users/2/friends/1")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert Error(**response.json()) == ErrAlreadyFriends
+    assert response.json()['detail'] == strings.ALREADY_FRIENDS
 
     response = client.put("/users/1/friends/2")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert Error(**response.json()) == ErrAlreadyFriends
+    assert response.json()['detail'] == strings.ALREADY_FRIENDS

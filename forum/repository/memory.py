@@ -1,4 +1,4 @@
-from forum.api.models import Friendship, User, UserInfo
+from forum.models.domain import Friendship, User, UserInfo
 from forum.repository.abc import BaseFriendshipRepository, BaseUserRepository
 
 

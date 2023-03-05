@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from forum.api.models import User, UserInfo, Friendship
+from forum.models.domain import Friendship, User, UserInfo
 
 
 class BaseRepository(ABC):
@@ -30,3 +30,15 @@ class BaseFriendshipRepository(BaseRepository):
     @abstractmethod
     async def insert(self, friendship: Friendship) -> bool:
         pass
+
+
+# class BasePasswordRepository(BaseRepository):
+#     def __init__(self, encrypter)
+
+#     @abstractmethod
+#     async def insert(self, user_id: int, password: str) -> bool:
+#         pass
+
+#     @abstractmethod
+#     async def select(self, user_id: int, password: str) -> bool:
+#         pass

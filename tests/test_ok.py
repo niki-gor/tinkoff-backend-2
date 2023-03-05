@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from fastapi import status
 
-from forum.api.models import User
+from forum.models.domain import User
 from tests.common import client, user_mock, new_app
 
 
@@ -42,7 +42,7 @@ def test_edit_user(new_app):
     change.about = user_mock.about + " difference"
     change.name = user_mock.name + " other name"
     response = client.put("/users/1", content=change.json())
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_204_NO_CONTENT
 
     response = client.get("/users/1")
     assert response.json() == change

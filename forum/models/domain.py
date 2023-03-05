@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, root_validator, validator
+from pydantic import BaseModel, root_validator, validator, EmailStr
 
 
 class UserInfo(BaseModel):
@@ -28,25 +28,6 @@ class UserInfo(BaseModel):
 
 class User(UserInfo):
     user_id: int
-
-
-class UserId(BaseModel):
-    user_id: int
-
-
-class Error(BaseModel):
-    detail: str
-
-
-class EmptyBody(BaseModel):
-    '''
-    NB: EmptyBody всегда должен стоять в конце объединения типов Type1 | ... | TypeN | EmptyBody
-
-    Тело пустое => EmptyBody соответствует любой словарь.
-    Поэтому, чтобы не возникло преждевременного type-match, 
-    EmptyBody должен стоять в конце объединений типов.
-    '''
-    pass
 
 
 class Friendship(BaseModel):
