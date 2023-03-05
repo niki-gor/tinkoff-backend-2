@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 
 from forum.models.domain import Friendship
-from forum.repository import friendships_repo, users_repo
-from forum.repository.abc import BaseFriendshipRepository, BaseUserRepository
+from forum.repositories import friendships_repo, users_repo
+from forum.repositories.abc import BaseFriendshipRepository, BaseUserRepository
 from forum.resources import strings
 
 router = APIRouter()

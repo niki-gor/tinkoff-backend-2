@@ -3,8 +3,8 @@ from fastapi.exceptions import HTTPException
 
 from forum.models.domain import User, UserInfo
 from forum.models.schemas import UserIdInResponse, UserInfoInResponse, ListOfUsersInResponse
-from forum.repository import users_repo
-from forum.repository.abc import BaseUserRepository
+from forum.repositories import users_repo
+from forum.repositories.abc import BaseUserRepository
 from forum.resources import strings
 
 router = APIRouter()

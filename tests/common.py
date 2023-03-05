@@ -3,9 +3,9 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from forum.models.domain import UserInfo
-from forum.repository import friendships_repo, users_repo
-from forum.repository.memory import (MemoryFriendshipRepository,
-                                     MemoryUserRepository)
+from forum.repositories import friendships_repo, users_repo
+from forum.repositories.memory import (MemoryFriendshipRepository,
+                                       MemoryUserRepository)
 from forum.routes import router
 
 app = FastAPI()
