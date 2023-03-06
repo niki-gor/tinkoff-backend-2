@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from forum.models.domain import UserInfo
+from forum.models.schemas import UserInfoWithPassword
 from forum.repositories import friendships_repo, users_repo
 from forum.repositories.memory import (MemoryFriendshipRepository,
                                        MemoryUserRepository)
@@ -14,6 +15,7 @@ client = TestClient(app)
 user_mock = UserInfo(
     name="lol", about="literally nothing", age=42, email="lol@tinkoff.ru"
 )
+user_mock_passwd = UserInfoWithPassword(**user_mock.dict(), password='qwerty123')
 
 
 @pytest.fixture

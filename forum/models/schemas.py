@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from pydantic import BaseModel
+
 from forum.models.domain import User, UserInfo
 
 
@@ -12,3 +15,17 @@ class ListOfUsersInResponse(BaseModel):
 
 class UserInfoInResponse(BaseModel):
     user_info: UserInfo
+
+
+class JWTMeta(BaseModel):
+    exp: datetime
+    sub: str
+
+
+class JWTUser(BaseModel):
+    username: str
+
+
+class UserInfoWithPassword(UserInfo):
+    password: str
+    

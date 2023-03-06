@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from forum.models.domain import Friendship, User, UserInfo
+from forum.models.schemas import UserInfoWithPassword
 
 
 class BaseRepository(ABC):
@@ -10,7 +11,7 @@ class BaseRepository(ABC):
 
 class BaseUserRepository(BaseRepository):
     @abstractmethod
-    async def insert(self, user_info: UserInfo) -> int:
+    async def insert(self, user_info: UserInfoWithPassword) -> int:
         pass
 
     @abstractmethod

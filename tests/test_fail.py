@@ -1,7 +1,7 @@
 from fastapi import status
 
 from forum.resources import strings
-from tests.common import client, new_app, user_mock
+from tests.common import client, new_app, user_mock, user_mock_passwd
 
 
 def test_method_not_allowed(new_app):
@@ -19,11 +19,11 @@ def test_create_user_fail(new_app):
         {"name": ""},
         {"name": "a" * 100},
         {"about": "a" * 150},
-        {"email": "notemail"},
+        {"email": "notemail"}, # TODO test invalid passwds
     ]
 
     for bad_param in bad_params:
-        bad_user = {**user_mock.dict(), **bad_param}
+        bad_user = {**user_mock_passwd.dict(), **bad_param}
         response = client.post("/users", json=bad_user)
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
@@ -38,7 +38,7 @@ def test_get_user_fail(new_app):
 
 
 def test_edit_user_fail(new_app):
-    response = client.post("/users", json=user_mock.dict())
+    response = client.post("/users", json=user_mock_passwd.dict())
 
     response = client.put("/users/2", json=user_mock.dict())
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -53,8 +53,8 @@ def test_make_friendship_fail(new_app):
     response = client.put("/users/1/friends/2")
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    response = client.post("/users", json=user_mock.dict())
-    response = client.post("/users", json=user_mock.dict())
+    response = client.post("/users", json=user_mock_passwd.dict())
+    response = client.post("/users", json=user_mock_passwd.dict())
     response = client.put("/users/1/friends/2")
 
     response = client.put("/users/2/friends/1")

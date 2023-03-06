@@ -1,4 +1,5 @@
 from forum.models.domain import Friendship, User, UserInfo
+from forum.models.schemas import UserInfoWithPassword
 from forum.repositories.abc import BaseFriendshipRepository, BaseUserRepository
 
 
@@ -7,7 +8,7 @@ class MemoryUserRepository(BaseUserRepository):
         self.users: dict[int, UserInfo] = {}
         self.next_id = 1
 
-    async def insert(self, user_info: UserInfo) -> int:
+    async def insert(self, user_info: UserInfoWithPassword) -> int:
         self.users[self.next_id] = user_info
         try:
             return self.next_id
