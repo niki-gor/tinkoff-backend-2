@@ -5,7 +5,7 @@ from forum.models.domain import User, UserInfo
 from forum.models.schemas import (ListOfUsersInResponse, UserIdInResponse,
                                   UserInfoInResponse, UserInfoWithPlainPassword)
 from forum.repositories import users_repo
-from forum.repositories.abc import BaseUserRepository
+from forum.repositories.abc import BaseUsersRepository
 from forum.resources import strings
 
 router = APIRouter()
@@ -14,21 +14,21 @@ router = APIRouter()
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=UserIdInResponse)
 async def create_user(
     user_info: UserInfoWithPlainPassword,
-    users: BaseUserRepository = Depends(users_repo),
+    users: BaseUsersRepository = Depends(users_repo),
 ) -> UserIdInResponse:
     new_id = await users.insert(user_info)
     return UserIdInResponse(user_id=new_id)
 
 
 @router.get("", response_model=ListOfUsersInResponse)
-async def get_all_users(users: BaseUserRepository = Depends(users_repo)) -> ListOfUsersInResponse:
+async def get_all_users(users: BaseUsersRepository = Depends(users_repo)) -> ListOfUsersInResponse:
     all_users = await users.select_all()
     return ListOfUsersInResponse(users=all_users)
 
 
 @router.get("/{user_id}", response_model=UserInfoInResponse)
 async def get_user(
-    user_id: int, users: BaseUserRepository = Depends(users_repo)
+    user_id: int, users: BaseUsersRepository = Depends(users_repo)
 ) -> UserInfo:
     user_info = await users.select_by_id(user_id)
     if user_info is None:
@@ -44,7 +44,7 @@ async def get_user(
 async def edit_user(
     user_id: int,
     user_info: UserInfo,
-    users: BaseUserRepository = Depends(users_repo),
+    users: BaseUsersRepository = Depends(users_repo),
 ) -> None:
     ok = await users.update(user_id, user_info)
     if not ok:

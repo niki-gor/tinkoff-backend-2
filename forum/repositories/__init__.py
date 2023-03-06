@@ -1,6 +1,6 @@
-from forum.repositories.memory import (MemoryFriendshipRepository,
-                                     MemoryUserRepository)
+from forum.repositories.memory import (MemoryFriendsRepository,
+                                     MemoryUsersRepository)
 
-users_repo = MemoryUserRepository()
+users_repo = MemoryUsersRepository()
 
-friendships_repo = MemoryFriendshipRepository()
+friendships_repo = MemoryFriendsRepository()

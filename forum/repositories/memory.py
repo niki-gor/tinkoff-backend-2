@@ -1,18 +1,19 @@
-from forum.models.domain import Friendship, User, UserInfo, UserWithPassword
+from forum.models.domain import Friendship, User, UserInfo, UserInDB
 from forum.models.schemas import UserInfoWithPlainPassword
-from forum.repositories.abc import BaseFriendshipRepository, BaseUserRepository
+from forum.repositories.abc import BaseFriendsRepository, BaseUsersRepository
 
 
-class MemoryUserRepository(BaseUserRepository):
+class MemoryUsersRepository(BaseUsersRepository):
     def __init__(self):
-        self.users: dict[int, UserWithPassword] = {}
+        self.users: dict[int, UserInDB] = {}
         self.next_id = 1
 
     async def insert(self, user_info_passwd: UserInfoWithPlainPassword) -> int:
-        self.users[self.next_id] = UserWithPassword(
+        self.users[self.next_id] = UserInDB(
             **user_info_passwd.dict(),
             user_id=self.next_id,
         )
+        self.users[self.next_id].change_password(user_info_passwd.password)
         try:
             return self.next_id
         finally:
@@ -40,12 +41,13 @@ class MemoryUserRepository(BaseUserRepository):
         return True
 
 
-class MemoryFriendshipRepository(BaseFriendshipRepository):
+class MemoryFriendsRepository(BaseFriendsRepository):
     def __init__(self):
         self.friendships: set[tuple] = set()
 
-    async def insert(self, friendship: Friendship) -> bool:
-        if tuple(friendship) in self.friendships:
+    async def insert(self, first_id: int, second_id: int) -> bool:
+        friends = tuple([first_id, second_id])
+        if friends in self.friendships:
             return False
-        self.friendships.add(tuple(friendship))
+        self.friendships.add(friends)
         return True

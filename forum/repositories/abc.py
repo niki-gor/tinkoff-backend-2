@@ -9,7 +9,7 @@ class BaseRepository(ABC):
         return self
 
 
-class BaseUserRepository(BaseRepository):
+class BaseUsersRepository(BaseRepository):
     @abstractmethod
     async def insert(self, user_info: UserInfoWithPlainPassword) -> int:
         pass
@@ -27,9 +27,9 @@ class BaseUserRepository(BaseRepository):
         pass
 
 
-class BaseFriendshipRepository(BaseRepository):
+class BaseFriendsRepository(BaseRepository):
     @abstractmethod
-    async def insert(self, friendship: Friendship) -> bool:
+    async def insert(self, first_id: int, second_id: int) -> bool:
         pass
 
 

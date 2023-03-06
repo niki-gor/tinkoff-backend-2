@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 
 from forum.models.domain import Friendship
 from forum.repositories import friendships_repo, users_repo
-from forum.repositories.abc import BaseFriendshipRepository, BaseUserRepository
+from forum.repositories.abc import BaseFriendsRepository, BaseUsersRepository
 from forum.resources import strings
 
 router = APIRouter()
@@ -13,8 +13,8 @@ router = APIRouter()
 async def befriend(
     user_id: int,
     to_id: int,
-    users: BaseUserRepository = Depends(users_repo),
-    friendships: BaseFriendshipRepository = Depends(friendships_repo),
+    users: BaseUsersRepository = Depends(users_repo),
+    friendships: BaseFriendsRepository = Depends(friendships_repo),
 ) -> None:
     for _id in [user_id, to_id]:
         user = await users.select_by_id(_id)
@@ -24,7 +24,7 @@ async def befriend(
             )
 
     friendship = Friendship(first_id=user_id, second_id=to_id)
-    ok = await friendships.insert(friendship)
+    ok = await friendships.insert(friendship.first_id, friendship.second_id)
     if not ok:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=strings.ALREADY_FRIENDS
