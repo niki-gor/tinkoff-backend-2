@@ -26,6 +26,6 @@ class JWTUser(BaseModel):
     username: str
 
 
-class UserInfoWithPassword(UserInfo):
+class UserInfoWithPlainPassword(UserInfo):
     password: str
     

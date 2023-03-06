@@ -30,6 +30,10 @@ class User(UserInfo):
     user_id: int
 
 
+class UserWithPassword(User):
+    password: str
+
+
 class Friendship(BaseModel):
     first_id: int
     second_id: int

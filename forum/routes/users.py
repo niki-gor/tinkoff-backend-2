@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 
 from forum.models.domain import User, UserInfo
 from forum.models.schemas import (ListOfUsersInResponse, UserIdInResponse,
-                                  UserInfoInResponse, UserInfoWithPassword)
+                                  UserInfoInResponse, UserInfoWithPlainPassword)
 from forum.repositories import users_repo
 from forum.repositories.abc import BaseUserRepository
 from forum.resources import strings
@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=UserIdInResponse)
 async def create_user(
-    user_info: UserInfoWithPassword,
+    user_info: UserInfoWithPlainPassword,
     users: BaseUserRepository = Depends(users_repo),
 ) -> UserIdInResponse:
     new_id = await users.insert(user_info)
