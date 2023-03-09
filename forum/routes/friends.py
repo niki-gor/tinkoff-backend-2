@@ -24,7 +24,7 @@ async def befriend(
             )
 
     friendship = Friendship(first_id=user_id, second_id=to_id)
-    ok = await friendships.insert(friendship.first_id, friendship.second_id)
+    ok = await friendships.insert(friendship)
     if not ok:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=strings.ALREADY_FRIENDS

@@ -29,7 +29,7 @@ class BaseUsersRepository(BaseRepository):
 
 class BaseFriendsRepository(BaseRepository):
     @abstractmethod
-    async def insert(self, first_id: int, second_id: int) -> bool:
+    async def insert(self, friendship: Friendship) -> bool:
         pass
 
 

@@ -45,9 +45,8 @@ class MemoryFriendsRepository(BaseFriendsRepository):
     def __init__(self):
         self.friendships: set[tuple] = set()
 
-    async def insert(self, first_id: int, second_id: int) -> bool:
-        friends = tuple([first_id, second_id])
-        if friends in self.friendships:
+    async def insert(self, friendship: Friendship) -> bool:
+        if tuple(friendship) in self.friendships:
             return False
-        self.friendships.add(friends)
+        self.friendships.add(tuple(friendship))
         return True
