@@ -39,26 +39,3 @@ class UserInDB(User):
     
     def change_password(self, plain_password: str):
         return security.get_password_hash(plain_password)
-
-
-class Friendship(BaseModel):
-    first_id: int
-    second_id: int
-
-    @validator("first_id", "second_id")
-    def id_is_ok(cls, v):
-        if v < 0:
-            raise ValueError("expected user_id > 0")
-        return v
-
-    @root_validator
-    def first_not_eq_second(cls, values):
-        if values["first_id"] == values["second_id"]:
-            raise ValueError("friends IDs should be different")
-        return values
-    
-    @root_validator
-    def make_sorted(cls, values):
-        values["first_id"], values["second_id"] = sorted([values["first_id"], values["second_id"]])
-        return values
-        

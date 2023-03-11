@@ -55,12 +55,20 @@ def test_make_friendship_fail(new_app):
 
     response = client.post("/users", json=user_mock_passwd.dict())
     response = client.post("/users", json=user_mock_passwd.dict())
+
+    response = client.put("/users/1/friends/1")
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()['detail'] == strings.SAME_FRIENDS_IDS
+
     response = client.put("/users/1/friends/2")
 
-    response = client.put("/users/2/friends/1")
+    response = client.put("/users/1/friends/2")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()['detail'] == strings.ALREADY_FRIENDS
 
-    response = client.put("/users/1/friends/2")
+    response = client.put("/users/2/friends/1")
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = client.put("/users/2/friends/1")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()['detail'] == strings.ALREADY_FRIENDS

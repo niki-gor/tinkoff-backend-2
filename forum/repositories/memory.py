@@ -1,4 +1,4 @@
-from forum.models.domain import Friendship, User, UserInfo, UserInDB
+from forum.models.domain import User, UserInfo, UserInDB
 from forum.models.schemas import UserInfoWithPlainPassword
 from forum.repositories.abc import BaseFriendsRepository, BaseUsersRepository
 
@@ -45,8 +45,9 @@ class MemoryFriendsRepository(BaseFriendsRepository):
     def __init__(self):
         self.friendships: set[tuple] = set()
 
-    async def insert(self, friendship: Friendship) -> bool:
-        if tuple(friendship) in self.friendships:
+    async def insert(self, from_id: int, to_id: int) -> bool:
+        friendship = tuple([from_id, to_id])
+        if friendship in self.friendships:
             return False
-        self.friendships.add(tuple(friendship))
+        self.friendships.add(friendship)
         return True
