@@ -1,34 +1,13 @@
-from pydantic import BaseModel, root_validator, validator, EmailStr
+from pydantic import BaseModel
 from forum.services import security
 
 
-class UserInfo(BaseModel):
+class User(BaseModel):
+    user_id: int
     name: str
     about: str
     age: int
-    email: EmailStr
-
-    @validator("name")
-    def name_exists_not_too_long(cls, v):
-        if not 1 <= len(v) <= 30:
-            raise ValueError("invalid name length")
-        return v
-
-    @validator("about")
-    def about_not_too_long(cls, v):
-        if not len(v) <= 120:
-            raise ValueError("too much info about you")
-        return v
-
-    @validator("age")
-    def age_i_can_believe(cls, v):
-        if not 1 <= v <= 120:
-            raise ValueError("I don't believe you")
-        return v
-
-
-class User(UserInfo):
-    user_id: int
+    email: str
 
 
 class UserInDB(User):

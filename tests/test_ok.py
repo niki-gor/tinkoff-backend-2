@@ -22,8 +22,8 @@ def test_get_all_users(new_app):
 
     response = client.get("/users")
     assert response.json()["users"] == [
-        User(**user_mock.dict(), user_id=1),
-        User(**user_mock.dict(), user_id=2),
+        user_mock.copy(update={'user_id': 1}),
+        user_mock.copy(update={'user_id': 2}),
     ]
 
 
@@ -32,7 +32,7 @@ def test_get_user(new_app):
 
     response = client.get("/users/1")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["user_info"] == user_mock
+    assert response.json()["user"] == user_mock.copy(update={'user_id': 1})
 
 
 def test_edit_user(new_app):
@@ -45,7 +45,7 @@ def test_edit_user(new_app):
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     response = client.get("/users/1")
-    assert response.json()["user_info"] == change
+    assert response.json()["user"] == change.copy(update={'user_id': 1})
 
 
 def test_make_friendship(new_app):

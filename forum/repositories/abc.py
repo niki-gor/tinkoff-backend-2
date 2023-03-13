@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from forum.models.domain import User, UserInfo
-from forum.models.schemas import UserInfoWithPlainPassword
+from forum.models.domain import User
 
 
 class BaseRepository(ABC):
@@ -11,7 +10,9 @@ class BaseRepository(ABC):
 
 class BaseUsersRepository(BaseRepository):
     @abstractmethod
-    async def insert(self, user_info: UserInfoWithPlainPassword) -> int:
+    async def insert(
+        self, *, name: str, about: str, age: int, email: str, password: str
+    ) -> int:
         pass
 
     @abstractmethod
@@ -19,11 +20,13 @@ class BaseUsersRepository(BaseRepository):
         pass
 
     @abstractmethod
-    async def select_by_id(self, user_id: int) -> UserInfo | None:
+    async def select_by_id(self, user_id: int) -> User | None:
         pass
 
     @abstractmethod
-    async def update(self, user_id: int, user_info: UserInfo) -> bool:
+    async def update(
+        self, *, user_id: int, name: str, about: str, age: int, email: str, password: str
+    ) -> bool:
         pass
 
 

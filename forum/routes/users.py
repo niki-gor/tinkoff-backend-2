@@ -1,9 +1,15 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 
-from forum.models.domain import User, UserInfo
-from forum.models.schemas import (ListOfUsersInResponse, UserIdInResponse,
-                                  UserInfoInResponse, UserInfoWithPlainPassword)
+from forum.models.schemas import (
+    ListOfUsersInResponse,
+    UserCredentials,
+    UserIdInResponse,
+    UserInResponse,
+    UserInUpdate,
+    JWTUser,
+    UserInCreate,
+)
 from forum.repositories import users_repo
 from forum.repositories.abc import BaseUsersRepository
 from forum.resources import strings
@@ -13,29 +19,31 @@ router = APIRouter()
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=UserIdInResponse)
 async def create_user(
-    user_info: UserInfoWithPlainPassword,
+    user_info: UserInCreate,
     users: BaseUsersRepository = Depends(users_repo),
 ) -> UserIdInResponse:
-    new_id = await users.insert(user_info)
+    new_id = await users.insert(**user_info.dict())
     return UserIdInResponse(user_id=new_id)
 
 
 @router.get("", response_model=ListOfUsersInResponse)
-async def get_all_users(users: BaseUsersRepository = Depends(users_repo)) -> ListOfUsersInResponse:
+async def get_all_users(
+    users: BaseUsersRepository = Depends(users_repo),
+) -> ListOfUsersInResponse:
     all_users = await users.select_all()
     return ListOfUsersInResponse(users=all_users)
 
 
-@router.get("/{user_id}", response_model=UserInfoInResponse)
+@router.get("/{user_id}", response_model=UserInResponse)
 async def get_user(
     user_id: int, users: BaseUsersRepository = Depends(users_repo)
-) -> UserInfo:
+) -> UserInResponse:
     user_info = await users.select_by_id(user_id)
     if user_info is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
         )
-    return UserInfoInResponse(user_info=user_info)
+    return UserInResponse(user=user_info)
 
 
 @router.put(
@@ -43,11 +51,21 @@ async def get_user(
 )
 async def edit_user(
     user_id: int,
-    user_info: UserInfo,
+    user_info: UserInUpdate,
     users: BaseUsersRepository = Depends(users_repo),
 ) -> None:
-    ok = await users.update(user_id, user_info)
+    ok = await users.update(user_id=user_id, **user_info.dict())
     if not ok:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
         )
+
+
+@router.post("/{user_id}/login", response_model=JWTUser)
+async def login(
+    credentials: UserCredentials, users: BaseUsersRepository = Depends(users_repo)
+) -> JWTUser:
+    pass
+    # user = await users.select_by_id(credentials.user_id)
+    # if user
+    # credentials.user_id

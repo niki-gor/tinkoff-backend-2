@@ -19,7 +19,9 @@ def test_create_user_fail(new_app):
         {"name": ""},
         {"name": "a" * 100},
         {"about": "a" * 150},
-        {"email": "notemail"}, # TODO test invalid passwds
+        {"email": "notemail"},
+        {"password": "Qq1"},
+        {"password": "aaabbb111"},
     ]
 
     for bad_param in bad_params:
