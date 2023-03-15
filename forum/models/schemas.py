@@ -10,6 +10,7 @@ class UserInLogin(BaseModel):
     user_id: int
     password: str
 
+
 class UserIdInResponse(BaseModel):
     user_id: int
 

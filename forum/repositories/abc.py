@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from forum.models.domain import User
+from forum.models.domain import User, UserInDB
 
 
 class BaseRepository(ABC):
@@ -20,7 +20,7 @@ class BaseUsersRepository(BaseRepository):
         pass
 
     @abstractmethod
-    async def select_by_id(self, user_id: int) -> User | None:
+    async def select_by_id(self, user_id: int) -> UserInDB | None:
         pass
 
     @abstractmethod

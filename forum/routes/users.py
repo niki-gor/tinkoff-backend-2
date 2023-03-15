@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
+from forum.models.domain import User
 
 from forum.models.schemas import (
     ListOfUsersInResponse,
@@ -38,12 +39,13 @@ async def get_all_users(
 async def get_user(
     user_id: int, users: BaseUsersRepository = Depends(users_repo)
 ) -> UserInResponse:
-    user_info = await users.select_by_id(user_id)
-    if user_info is None:
+    user_with_passwd = await users.select_by_id(user_id)
+    if user_with_passwd is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
         )
-    return UserInResponse(user=user_info)
+    user = User(**user_with_passwd.dict())
+    return UserInResponse(user=user)
 
 
 @router.put(
@@ -65,7 +67,9 @@ async def edit_user(
 async def login(
     credentials: UserCredentials, users: BaseUsersRepository = Depends(users_repo)
 ) -> JWTUser:
-    pass
-    # user = await users.select_by_id(credentials.user_id)
-    # if user
-    # credentials.user_id
+    user = await users.select_by_id(credentials.user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
+        )
+    

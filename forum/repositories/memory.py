@@ -25,12 +25,11 @@ class MemoryUsersRepository(BaseUsersRepository):
             User(**user_with_passwd.dict()) for user_with_passwd in self.users.values()
         ]
 
-    async def select_by_id(self, user_id: int) -> User | None:
+    async def select_by_id(self, user_id: int) -> UserInDB | None:
         try:
-            user_with_passwd = self.users[user_id]
+            return self.users[user_id]
         except KeyError:
             return None
-        return User(**user_with_passwd.dict())
 
     async def update(
         self,
