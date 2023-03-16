@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from forum.models.domain import User
 
-from forum.models.schemas import UserInCreate, UserInUpdate
-from forum.repositories import friendships_repo, users_repo
+from forum.models.schemas import UserInCreate
+from forum.dependencies.database import friendships_repo, users_repo
 from forum.repositories.memory import (MemoryFriendsRepository,
                                        MemoryUsersRepository)
 from forum.routes import router

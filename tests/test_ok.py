@@ -2,7 +2,6 @@ from copy import deepcopy
 
 from fastapi import status
 
-from forum.models.domain import User
 from tests.common import client, new_app, user_mock, user_mock_passwd
 
 

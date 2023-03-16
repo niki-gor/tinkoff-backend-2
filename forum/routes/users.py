@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
+from forum.core.config import AppSettings
 from forum.models.domain import User
 
 from forum.models.schemas import (
@@ -10,10 +11,13 @@ from forum.models.schemas import (
     UserInUpdate,
     JWTUser,
     UserInCreate,
+    UserWithToken,
 )
-from forum.repositories import users_repo
-from forum.repositories.abc import BaseUsersRepository
+from forum.dependencies.database import users_repo
+from forum.repositories.base import BaseUsersRepository
 from forum.resources import strings
+from forum.services import jwt
+from forum.core.config import app_settings, AppSettings
 
 router = APIRouter()
 
@@ -65,11 +69,21 @@ async def edit_user(
 
 @router.post("/{user_id}/login", response_model=JWTUser)
 async def login(
-    credentials: UserCredentials, users: BaseUsersRepository = Depends(users_repo)
+    credentials: UserCredentials,
+    users: BaseUsersRepository = Depends(users_repo),
+    settings: AppSettings = Depends(app_settings),
 ) -> JWTUser:
+    wrong_id_or_password = HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=strings.WRONG_ID_OR_PASSWD
+    )
     user = await users.select_by_id(credentials.user_id)
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
-        )
-    
+        raise wrong_id_or_password
+    if not user.check_password(credentials.password):
+        raise wrong_id_or_password
+
+    token = jwt.create_access_token_for_user(
+        user,
+        str(settings.secret_key.get_secret_value()),
+    )
+    return UserWithToken(**user.dict(), token=token)

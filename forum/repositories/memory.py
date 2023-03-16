@@ -1,5 +1,5 @@
 from forum.models.domain import User, UserInDB
-from forum.repositories.abc import BaseFriendsRepository, BaseUsersRepository
+from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
 
 
 class MemoryUsersRepository(BaseUsersRepository):

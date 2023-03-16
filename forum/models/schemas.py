@@ -6,6 +6,10 @@ from forum.models.domain import User
 from forum.models import validators
 
 
+class UserWithToken(User):
+    token: str
+
+
 class UserInLogin(BaseModel):
     user_id: int
     password: str
