@@ -1,4 +1,5 @@
 from fastapi import status
+from forum.models.schemas import UserCredentials
 
 from forum.resources import strings
 from tests.common import client, new_app, user_mock, user_mock_passwd
@@ -41,13 +42,24 @@ def test_get_user_fail(new_app):
 
 def test_edit_user_fail(new_app):
     response = client.post("/users", json=user_mock_passwd.dict())
+    response = client.post(
+        "/login",
+        json=UserCredentials(**user_mock_passwd.dict(), **response.json()).dict(),
+    )
+    token = response.json()["token"]
+    headers = {"Authorization": f"Bearer {token}"}
 
-    response = client.put("/users/2", json=user_mock.dict())
-    assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()['detail'] == strings.USER_NOT_FOUND
+    response = client.put("/users/2", json=user_mock.dict(), headers=headers)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.json()['detail'] == strings.INSUFFICIENT_PERMISSIONS_TO_EDIT
+    # нельзя редактировать другого пользователя вне зависимости от того, создан он или нет
+    response = client.post("/users", json=user_mock_passwd.dict())
+    response = client.put("/users/2", json=user_mock.dict(), headers=headers)
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.json()['detail'] == strings.INSUFFICIENT_PERMISSIONS_TO_EDIT
 
     bad_user = {**user_mock.dict(), "age": 1337}
-    response = client.put("/users/1", json=bad_user)
+    response = client.put("/users/1", json=bad_user, headers=headers)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 

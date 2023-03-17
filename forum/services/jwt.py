@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta
 from typing import Dict
+from fastapi import HTTPException, status
 
 import jwt
 from pydantic import ValidationError
 
 from forum.models.domain import User
 from forum.models.schemas import JWTMeta, JWTUser
+from forum.resources import strings
 
 JWT_SUBJECT = "access"
 ALGORITHM = "HS256"
@@ -26,16 +28,23 @@ def create_jwt_token(
 
 def create_access_token_for_user(user: User, secret_key: str) -> str:
     return create_jwt_token(
-        jwt_content=JWTUser(user_id=user.user_id).dict(),
+        jwt_content=JWTUser(user_id=str(user.user_id)).dict(),
         secret_key=secret_key,
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
 
 
-def get_user_id_from_token(token: str, secret_key: str) -> str:
+def get_user_id_from_token(token: str, secret_key: str) -> int:
     try:
-        return JWTUser(**jwt.decode(token, secret_key, algorithms=[ALGORITHM])).user_id
-    except jwt.PyJWTError as decode_error:
-        raise ValueError("unable to decode JWT token") from decode_error
-    except ValidationError as validation_error:
-        raise ValueError("malformed payload in token") from validation_error
+        jwt_user = JWTUser(**jwt.decode(token, secret_key, algorithms=[ALGORITHM]))
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=strings.MALFORMED_PAYLOAD,
+        )
+    except ValidationError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=strings.MALFORMED_PAYLOAD,
+        )
+    return int(jwt_user.user_id)

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, StrictStr, validator
 
 from forum.models.domain import User
 from forum.models import validators
@@ -32,13 +32,17 @@ class UserCredentials(BaseModel):
     password: str
 
 
+class TokenInResponse(BaseModel):
+    token: str
+
+
 class JWTMeta(BaseModel):
     exp: datetime
     sub: str
 
 
 class JWTUser(BaseModel):
-    user_id: int
+    user_id: str
 
 
 class UserInCreate(BaseModel):

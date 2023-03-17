@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 from forum.core.config import AppSettings
+from forum.dependencies.authentication import auth_user_id
 from forum.models.domain import User
 
 from forum.models.schemas import (
@@ -58,32 +59,14 @@ async def get_user(
 async def edit_user(
     user_id: int,
     user_info: UserInUpdate,
+    auth_user_id: int = Depends(auth_user_id),
     users: BaseUsersRepository = Depends(users_repo),
 ) -> None:
+    if user_id != auth_user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT)
+
     ok = await users.update(user_id=user_id, **user_info.dict())
     if not ok:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
         )
-
-
-@router.post("/{user_id}/login", response_model=JWTUser)
-async def login(
-    credentials: UserCredentials,
-    users: BaseUsersRepository = Depends(users_repo),
-    settings: AppSettings = Depends(app_settings),
-) -> JWTUser:
-    wrong_id_or_password = HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND, detail=strings.WRONG_ID_OR_PASSWD
-    )
-    user = await users.select_by_id(credentials.user_id)
-    if user is None:
-        raise wrong_id_or_password
-    if not user.check_password(credentials.password):
-        raise wrong_id_or_password
-
-    token = jwt.create_access_token_for_user(
-        user,
-        str(settings.secret_key.get_secret_value()),
-    )
-    return UserWithToken(**user.dict(), token=token)

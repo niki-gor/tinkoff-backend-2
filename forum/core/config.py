@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pydantic import SecretStr, BaseSettings
 
 
@@ -6,9 +7,7 @@ class AppSettings(BaseSettings):
     class Config:
         env_file = ".env"
         
-    
-    def __call__(self):
-        return self
 
-
-app_settings = AppSettings()
+@lru_cache
+def app_settings():
+    return AppSettings()

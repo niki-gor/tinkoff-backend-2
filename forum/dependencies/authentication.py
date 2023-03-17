@@ -1,28 +1,13 @@
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt import decode, exceptions, encode
+
+from forum.services import jwt
+from forum.core.config import AppSettings, app_settings
 
 
-async def verify_token()
-
-
-async def verify_token(x_token: str = Header()):
-    if x_token != "fake-super-secret-token":
-        raise HTTPException(status_code=400, detail="X-Token header invalid")
-
-
-async def verify_key(x_key: str = Header()):
-    if x_key != "fake-super-secret-key":
-        raise HTTPException(status_code=400, detail="X-Key header invalid")
-    return x_key
-
-
-app = FastAPI(dependencies=[Depends(verify_token), Depends(verify_key)])
-
-
-@app.get("/items/")
-async def read_items():
-    return [{"item": "Portal Gun"}, {"item": "Plumbus"}]
-
-
-@app.get("/users/")
-async def read_users():
-    return [{"username": "Rick"}, {"username": "Morty"}]
+async def auth_user_id( 
+    token: str = Depends(OAuth2PasswordBearer(tokenUrl="/login")),
+    settings: AppSettings = Depends(app_settings)
+) -> int:
+    return jwt.get_user_id_from_token(token, settings.secret_key.get_secret_value())

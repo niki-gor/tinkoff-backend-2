@@ -11,10 +11,10 @@ class User(BaseModel):
 
 
 class UserInDB(User):
-    hashed_password: str = ""
+    hashed_password: bytes = ''.encode()
 
     def check_password(self, plain_password: str) -> bool:
         return security.verify_password(plain_password, self.hashed_password)
     
     def change_password(self, plain_password: str):
-        return security.get_password_hash(plain_password)
+        self.hashed_password = security.get_password_hash(plain_password)
