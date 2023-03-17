@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 from forum.core.config import AppSettings
-from forum.dependencies.authentication import auth_user_id
+from forum.dependencies.authentication import authenticate_user_id
 from forum.models.domain import User
 
 from forum.models.schemas import (
@@ -59,11 +59,14 @@ async def get_user(
 async def edit_user(
     user_id: int,
     user_info: UserInUpdate,
-    auth_user_id: int = Depends(auth_user_id),
+    auth_user_id: int = Depends(authenticate_user_id),
     users: BaseUsersRepository = Depends(users_repo),
 ) -> None:
     if user_id != auth_user_id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT)
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT,
+        )
 
     ok = await users.update(user_id=user_id, **user_info.dict())
     if not ok:

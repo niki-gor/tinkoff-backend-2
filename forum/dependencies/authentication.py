@@ -6,7 +6,7 @@ from forum.services import jwt
 from forum.core.config import AppSettings, app_settings
 
 
-async def auth_user_id( 
+async def authenticate_user_id( 
     token: str = Depends(OAuth2PasswordBearer(tokenUrl="/login")),
     settings: AppSettings = Depends(app_settings)
 ) -> int:

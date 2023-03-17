@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from forum.models.domain import User
 
-from forum.models.schemas import UserInCreate
+from forum.models.schemas import UserCredentials, UserInCreate
 from forum.dependencies.database import friendships_repo, users_repo
 from forum.repositories.memory import (MemoryFriendsRepository,
                                        MemoryUsersRepository)
@@ -24,3 +24,13 @@ def new_app():
     app.dependency_overrides[friendships_repo] = MemoryFriendsRepository()
     yield app
     app.dependency_overrides = {}
+
+
+def get_authorization_headers(*, user_id: int) -> dict:
+    response = client.post(
+        "/login",
+        json=UserCredentials(**user_mock_passwd.dict(), user_id=user_id).dict(),
+    )
+    token = response.json()["token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    return headers

@@ -1,18 +1,10 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 from forum.core.config import AppSettings
-from forum.models.domain import User
 
 from forum.models.schemas import (
-    ListOfUsersInResponse,
     TokenInResponse,
     UserCredentials,
-    UserIdInResponse,
-    UserInResponse,
-    UserInUpdate,
-    JWTUser,
-    UserInCreate,
-    UserWithToken,
 )
 from forum.dependencies.database import users_repo
 from forum.repositories.base import BaseUsersRepository

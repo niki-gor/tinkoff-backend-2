@@ -2,7 +2,7 @@ from fastapi import status
 from forum.models.schemas import UserCredentials
 
 from forum.resources import strings
-from tests.common import client, new_app, user_mock, user_mock_passwd
+from tests.common import client, get_authorization_headers, new_app, user_mock, user_mock_passwd
 
 
 def test_method_not_allowed(new_app):
@@ -42,12 +42,7 @@ def test_get_user_fail(new_app):
 
 def test_edit_user_fail(new_app):
     response = client.post("/users", json=user_mock_passwd.dict())
-    response = client.post(
-        "/login",
-        json=UserCredentials(**user_mock_passwd.dict(), **response.json()).dict(),
-    )
-    token = response.json()["token"]
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = get_authorization_headers(user_id=1)
 
     response = client.put("/users/2", json=user_mock.dict(), headers=headers)
     assert response.status_code == status.HTTP_403_FORBIDDEN
@@ -65,24 +60,26 @@ def test_edit_user_fail(new_app):
 
 def test_make_friendship_fail(new_app):
     response = client.put("/users/1/friends/2")
-    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     response = client.post("/users", json=user_mock_passwd.dict())
     response = client.post("/users", json=user_mock_passwd.dict())
+    headers = get_authorization_headers(user_id=1)
 
-    response = client.put("/users/1/friends/1")
+    response = client.put("/users/1/friends/1", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()['detail'] == strings.SAME_FRIENDS_IDS
 
-    response = client.put("/users/1/friends/2")
+    response = client.put("/users/1/friends/2", headers=headers)
 
-    response = client.put("/users/1/friends/2")
+    response = client.put("/users/1/friends/2", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()['detail'] == strings.ALREADY_FRIENDS
 
-    response = client.put("/users/2/friends/1")
+    headers = get_authorization_headers(user_id=2)
+    response = client.put("/users/2/friends/1", headers=headers)
     assert response.status_code == status.HTTP_201_CREATED
 
-    response = client.put("/users/2/friends/1")
+    response = client.put("/users/2/friends/1", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()['detail'] == strings.ALREADY_FRIENDS

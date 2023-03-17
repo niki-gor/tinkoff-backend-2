@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
+from forum.dependencies.authentication import authenticate_user_id
 
 from forum.dependencies.database import friendships_repo, users_repo
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
@@ -12,9 +13,16 @@ router = APIRouter()
 async def befriend(
     user_id: int,
     to_id: int,
+    auth_user_id: int = Depends(authenticate_user_id),
     users: BaseUsersRepository = Depends(users_repo),
     friendships: BaseFriendsRepository = Depends(friendships_repo),
 ) -> None:
+    if user_id != auth_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT,
+        )
+
     if user_id == to_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=strings.SAME_FRIENDS_IDS
