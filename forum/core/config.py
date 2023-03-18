@@ -3,7 +3,7 @@ from pydantic import SecretStr, BaseSettings
 
 
 class AppSettings(BaseSettings):
-    secret_key: SecretStr
+    secret_key: SecretStr = 'THIS STRING SHOULD BE LOADED FROM .env'
     class Config:
         env_file = ".env"
         
