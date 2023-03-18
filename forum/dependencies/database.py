@@ -1,5 +1,4 @@
-from forum.repositories.memory import (MemoryFriendsRepository,
-                                     MemoryUsersRepository)
+from forum.repositories.memory import MemoryFriendsRepository, MemoryUsersRepository
 
 users_repo = MemoryUsersRepository()
 

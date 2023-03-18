@@ -5,15 +5,18 @@ from forum.models.domain import User
 
 from forum.models.schemas import UserCredentials, UserInCreate
 from forum.dependencies.database import friendships_repo, users_repo
-from forum.repositories.memory import (MemoryFriendsRepository,
-                                       MemoryUsersRepository)
+from forum.repositories.memory import MemoryFriendsRepository, MemoryUsersRepository
 from forum.routes import router
 
 app = FastAPI()
 app.include_router(router)
 client = TestClient(app)
 user_mock = User(
-    user_id=-1, name="lol", about="literally nothing", age=42, email="lol@example.com", 
+    user_id=-1,
+    name="lol",
+    about="literally nothing",
+    age=42,
+    email="lol@example.com",
 )
 user_mock_passwd = UserInCreate(**user_mock.dict(), password="123QQQqqq")
 

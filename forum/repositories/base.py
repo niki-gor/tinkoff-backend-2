@@ -25,7 +25,14 @@ class BaseUsersRepository(BaseRepository):
 
     @abstractmethod
     async def update(
-        self, *, user_id: int, name: str, about: str, age: int, email: str, password: str
+        self,
+        *,
+        user_id: int,
+        name: str,
+        about: str,
+        age: int,
+        email: str,
+        password: str
     ) -> bool:
         pass
 

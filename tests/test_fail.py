@@ -2,7 +2,13 @@ from fastapi import status
 from forum.models.schemas import UserCredentials
 
 from forum.resources import strings
-from tests.common import client, get_authorization_headers, new_app, user_mock, user_mock_passwd
+from tests.common import (
+    client,
+    get_authorization_headers,
+    new_app,
+    user_mock,
+    user_mock_passwd,
+)
 
 
 def test_method_not_allowed(new_app):
@@ -34,7 +40,7 @@ def test_create_user_fail(new_app):
 def test_get_user_fail(new_app):
     response = client.get("/users/1")
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()['detail'] == strings.USER_NOT_FOUND
+    assert response.json()["detail"] == strings.USER_NOT_FOUND
 
     response = client.get("/users/definitely_not_an_id")
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -46,12 +52,12 @@ def test_edit_user_fail(new_app):
 
     response = client.put("/users/2", json=user_mock.dict(), headers=headers)
     assert response.status_code == status.HTTP_403_FORBIDDEN
-    assert response.json()['detail'] == strings.INSUFFICIENT_PERMISSIONS
+    assert response.json()["detail"] == strings.INSUFFICIENT_PERMISSIONS
     # нельзя редактировать другого пользователя вне зависимости от того, создан он или нет
     response = client.post("/users", json=user_mock_passwd.dict())
     response = client.put("/users/2", json=user_mock.dict(), headers=headers)
     assert response.status_code == status.HTTP_403_FORBIDDEN
-    assert response.json()['detail'] == strings.INSUFFICIENT_PERMISSIONS
+    assert response.json()["detail"] == strings.INSUFFICIENT_PERMISSIONS
 
     bad_user = {**user_mock.dict(), "age": 1337}
     response = client.put("/users/1", json=bad_user, headers=headers)
@@ -68,13 +74,13 @@ def test_make_friendship_fail(new_app):
 
     response = client.put("/users/1/friends/1", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json()['detail'] == strings.SAME_FRIENDS_IDS
+    assert response.json()["detail"] == strings.SAME_FRIENDS_IDS
 
     response = client.put("/users/1/friends/2", headers=headers)
 
     response = client.put("/users/1/friends/2", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json()['detail'] == strings.ALREADY_FRIENDS
+    assert response.json()["detail"] == strings.ALREADY_FRIENDS
 
     headers = get_authorization_headers(user_id=2)
     response = client.put("/users/2/friends/1", headers=headers)
@@ -82,7 +88,7 @@ def test_make_friendship_fail(new_app):
 
     response = client.put("/users/2/friends/1", headers=headers)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.json()['detail'] == strings.ALREADY_FRIENDS
+    assert response.json()["detail"] == strings.ALREADY_FRIENDS
 
 
 def test_login_fail(new_app):
@@ -91,15 +97,15 @@ def test_login_fail(new_app):
         json=UserCredentials(user_id=1, password=user_mock_passwd.password).dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()['detail'] == strings.WRONG_ID_OR_PASSWD
+    assert response.json()["detail"] == strings.WRONG_ID_OR_PASSWD
 
     response = client.post("/users", json=user_mock_passwd.dict())
     response = client.post(
         "/login",
-        json=UserCredentials(user_id=1, password='incorrect password').dict(),
+        json=UserCredentials(user_id=1, password="incorrect password").dict(),
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json()['detail'] == strings.WRONG_ID_OR_PASSWD
+    assert response.json()["detail"] == strings.WRONG_ID_OR_PASSWD
 
 
 def test_chat_fail(new_app):
@@ -108,10 +114,9 @@ def test_chat_fail(new_app):
     headers = get_authorization_headers(user_id=1)
     response = client.put("/users/1/friends/2", headers=headers)
 
-    response = client.get('/users/1/chat/2')
+    response = client.get("/users/1/chat/2")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    response = client.get('/users/1/chat/2', headers=headers)
+    response = client.get("/users/1/chat/2", headers=headers)
     assert response.status_code == status.HTTP_403_FORBIDDEN
-    assert response.json()['detail'] == strings.CHAT_ONLY_FRIENDS
-    
+    assert response.json()["detail"] == strings.CHAT_ONLY_FRIENDS

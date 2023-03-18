@@ -63,7 +63,7 @@ class UserInCreate(BaseModel):
     @validator("age")
     def age_i_can_believe(cls, v):
         return validators.age_i_can_believe(v)
-    
+
     @validator("password")
     def good_password(cls, v: str):
         return validators.good_password(v)
@@ -87,7 +87,7 @@ class UserInUpdate(BaseModel):
     @validator("age")
     def age_i_can_believe(cls, v):
         return validators.age_i_can_believe(v)
-    
+
     @validator("password")
     def good_password(cls, v: str):
         return validators.good_password(v)

@@ -82,5 +82,5 @@ def test_chat(new_app):
     headers = get_authorization_headers(user_id=2)
     response = client.put("/users/2/friends/1", headers=headers)
 
-    response = client.get('/users/2/chat/1', headers=headers)
+    response = client.get("/users/2/chat/1", headers=headers)
     assert response.status_code == status.HTTP_200_OK
