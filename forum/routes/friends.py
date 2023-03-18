@@ -20,7 +20,7 @@ async def befriend(
     if user_id != auth_user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT,
+            detail=strings.INSUFFICIENT_PERMISSIONS,
         )
 
     if user_id == to_id:

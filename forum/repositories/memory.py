@@ -67,3 +67,10 @@ class MemoryFriendsRepository(BaseFriendsRepository):
             return False
         self.friendships.add(friendship)
         return True
+
+    async def are_friends(self, first_id: int, second_id: int) -> bool:
+        print((first_id, second_id) in self.friendships)
+        print((second_id, first_id) in self.friendships)
+        return ((first_id, second_id) in self.friendships) and (
+            (second_id, first_id) in self.friendships
+        )

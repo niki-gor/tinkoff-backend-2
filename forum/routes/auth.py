@@ -15,7 +15,9 @@ from forum.core.config import app_settings, AppSettings
 router = APIRouter()
 
 
-@router.post("/login", response_model=TokenInResponse)
+@router.post(
+    "/login", response_model=TokenInResponse, status_code=status.HTTP_201_CREATED
+)
 async def login(
     credentials: UserCredentials,
     users: BaseUsersRepository = Depends(users_repo),
@@ -29,7 +31,7 @@ async def login(
         raise wrong_id_or_password
     if not user.check_password(credentials.password):
         raise wrong_id_or_password
-    
+
     token = jwt.create_access_token_for_user(
         user,
         str(settings.secret_key.get_secret_value()),

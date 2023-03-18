@@ -65,7 +65,7 @@ async def edit_user(
     if user_id != auth_user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=strings.INSUFFICIENT_PERMISSIONS_TO_EDIT,
+            detail=strings.INSUFFICIENT_PERMISSIONS,
         )
 
     ok = await users.update(user_id=user_id, **user_info.dict())

@@ -35,14 +35,6 @@ class BaseFriendsRepository(BaseRepository):
     async def insert(self, from_id: int, to_id: int) -> bool:
         pass
 
-
-# class BasePasswordRepository(BaseRepository):
-#     def __init__(self, encrypter)
-
-#     @abstractmethod
-#     async def insert(self, user_id: int, password: str) -> bool:
-#         pass
-
-#     @abstractmethod
-#     async def select(self, user_id: int, password: str) -> bool:
-#         pass
+    @abstractmethod
+    async def are_friends(self, first_id: int, second_id: int) -> bool:
+        pass
