@@ -13,7 +13,7 @@ app = FastAPI()
 app.include_router(router)
 client = TestClient(app)
 user_mock = User(
-    user_id=-1, name="lol", about="literally nothing", age=42, email="lol@tinkoff.ru", 
+    user_id=-1, name="lol", about="literally nothing", age=42, email="lol@example.com", 
 )
 user_mock_passwd = UserInCreate(**user_mock.dict(), password="123QQQqqq")
 
