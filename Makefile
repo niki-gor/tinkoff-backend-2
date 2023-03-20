@@ -10,4 +10,4 @@ install:
 
 .PHONY: swagger
 swagger:
-	python -m webbrowser http://localhost:8000/docs 
+	python -m webbrowser http://localhost:8081/docs 
