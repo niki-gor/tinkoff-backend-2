@@ -1,0 +1,17 @@
+version: '3'
+services:
+  api:
+    image: nikigor/forum
+    container_name: forum_api
+    ports:
+      - 8081:8081
+    restart: always
+
+  api_2:
+    image: nikigor/forum
+    container_name: forum_api_2
+    profiles:
+      - double_api
+    ports:
+      - 8082:8081
+    restart: always
