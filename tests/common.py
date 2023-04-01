@@ -1,17 +1,12 @@
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from forum.core.settings import AppSettings
-from forum.dependencies.settings import get_app_settings
+
+from forum import get_application
+from forum.dependencies.database import get_connection_from_pool
 from forum.models.domain import User
-
 from forum.models.schemas import UserCredentials, UserInCreate
-from forum.dependencies.database import get_friends_repo, get_users_repo
-from forum.repositories.memory import MemoryFriendsRepository, MemoryUsersRepository
-from forum.routes import router
 
-app = FastAPI()
-app.include_router(router)
+app = get_application()
 client = TestClient(app)
 user_mock = User(
     user_id=-1,
@@ -24,14 +19,15 @@ user_mock_passwd = UserInCreate(**user_mock.dict(), password="123QQQqqq")
 
 
 @pytest.fixture
-def new_app():
-    app.dependency_overrides[get_users_repo] = MemoryUsersRepository()
-    app.dependency_overrides[get_friends_repo] = MemoryFriendsRepository()
+async def new_app():
+    async with get_connection_from_pool() as conn:
+        await conn.execute(
+            """
+            truncate table friends;
+            truncate table users;
+        """
+        )
     yield app
-    app.dependency_overrides = {}
-    app.dependency_overrides[get_app_settings] = lambda: AppSettings(
-        secret_key="test", dsn="postgres://test:test@test/test"
-    )
 
 
 def get_authorization_headers(*, user_id: int) -> dict:
