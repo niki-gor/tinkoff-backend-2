@@ -4,7 +4,7 @@ services:
     depends_on:
       - test-db
     build:
-      dockerfile: tests/Dockerfile
+      dockerfile: Dockerfile.test
     ports:
       - 8082:8081
     restart: always

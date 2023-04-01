@@ -3,7 +3,8 @@ services:
   api:
     depends_on:
       - db
-    build: .
+    build:
+      dockerfile: Dockerfile.prod
     ports:
       - 8081:8081
     restart: always
