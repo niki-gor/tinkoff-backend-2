@@ -20,5 +20,5 @@ down:
 
 .PHONY: test
 test:
-	docker compose -f docker-compose.test.yml run --rm test-api pytest
+	docker compose -f docker-compose.test.yml run --build --rm test-api pytest
 	docker compose -f docker-compose.test.yml down

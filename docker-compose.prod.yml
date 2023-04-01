@@ -3,9 +3,7 @@ services:
   api:
     depends_on:
       - db
-    build:
-      context: .
-      dockerfile: Dockerfile.prod.api
+    build: .
     ports:
       - 8081:8081
     restart: always
@@ -17,8 +15,7 @@ services:
 
   db:
     build:
-      context: .
-      dockerfile: Dockerfile.db
+      context: forum/db
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword

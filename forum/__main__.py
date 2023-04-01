@@ -1,6 +1,6 @@
 import uvicorn
 
-from forum import get_application
+from forum.core.app import get_application
 
 if __name__ == "__main__":
     app = get_application()

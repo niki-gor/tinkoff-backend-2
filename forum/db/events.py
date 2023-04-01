@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from loguru import logger
 
 from forum.core.settings import AppSettings
-from forum.db import queries
 
 
 async def connect_to_db(app: FastAPI, settings: AppSettings) -> None:
@@ -16,13 +15,6 @@ async def connect_to_db(app: FastAPI, settings: AppSettings) -> None:
     )
 
     logger.info("Connection established")
-
-
-async def create_tables(app: FastAPI):
-    async with app.state.pool.acquire() as conn:
-        await queries.create_users_table(conn)
-    async with app.state.pool.acquire() as conn:
-        await queries.create_friends_table(conn)
 
 
 async def close_db_connection(app: FastAPI) -> None:

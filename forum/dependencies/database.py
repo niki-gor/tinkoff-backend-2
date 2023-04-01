@@ -2,6 +2,7 @@ from typing import AsyncGenerator
 
 from asyncpg import Connection, Pool
 from fastapi import Depends, Request
+from loguru import logger
 
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
 from forum.repositories.database import (DatabaseFriendsRepository,

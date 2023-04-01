@@ -5,7 +5,7 @@ from forum.dependencies.settings import get_app_settings
 
 def make_peppered(plain_password: str):
     settings = get_app_settings()
-    pepper = settings.secret_key
+    pepper = settings.secret_key.get_secret_value()
     return plain_password + pepper
 
 

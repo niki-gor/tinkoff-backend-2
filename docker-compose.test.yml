@@ -4,8 +4,7 @@ services:
     depends_on:
       - test-db
     build:
-      context: .
-      dockerfile: Dockerfile.test.api
+      dockerfile: tests/Dockerfile
     ports:
       - 8082:8081
     restart: always
@@ -17,8 +16,7 @@ services:
 
   test-db:
     build:
-      context: .
-      dockerfile: Dockerfile.db
+      context: forum/db
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test

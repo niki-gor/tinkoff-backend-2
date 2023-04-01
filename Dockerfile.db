@@ -1,4 +1,0 @@
-FROM postgres:14
-
-COPY ./forum/db/queries/init.sql /docker-entrypoint-initdb.d/
-EXPOSE 5432
