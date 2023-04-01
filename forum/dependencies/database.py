@@ -5,8 +5,10 @@ from fastapi import Depends, Request
 from loguru import logger
 
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
-from forum.repositories.database import (DatabaseFriendsRepository,
-                                         DatabaseUsersRepository)
+from forum.repositories.database import (
+    DatabaseFriendsRepository,
+    DatabaseUsersRepository,
+)
 
 
 def get_db_pool(request: Request) -> Pool:

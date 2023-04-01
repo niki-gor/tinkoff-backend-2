@@ -7,6 +7,10 @@ install:
 	. venv/bin/activate
 	pip install -r requirements.txt
 
+.PHONY: lint
+lint:
+	black .
+
 .PHONY: swagger
 swagger:
 	python -m webbrowser http://localhost:8081/docs 

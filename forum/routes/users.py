@@ -4,8 +4,13 @@ from fastapi.exceptions import HTTPException
 from forum.dependencies.authentication import authenticate_user_id
 from forum.dependencies.database import get_users_repo
 from forum.models.domain import User
-from forum.models.schemas import (ListOfUsersInResponse, UserIdInResponse,
-                                  UserInCreate, UserInResponse, UserInUpdate)
+from forum.models.schemas import (
+    ListOfUsersInResponse,
+    UserIdInResponse,
+    UserInCreate,
+    UserInResponse,
+    UserInUpdate,
+)
 from forum.repositories.base import BaseUsersRepository
 from forum.resources import strings
 

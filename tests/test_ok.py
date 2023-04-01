@@ -4,8 +4,7 @@ import pytest
 from fastapi import status
 
 from forum.models.schemas import UserCredentials
-from tests.conftest import (get_authorization_headers, user_mock,
-                            user_mock_passwd)
+from tests.conftest import get_authorization_headers, user_mock, user_mock_passwd
 
 pytestmark = pytest.mark.asyncio
 
@@ -25,7 +24,7 @@ async def test_get_all_users(client):
     response = await client.post("/users", json=user_mock_passwd.dict())
 
     response = await client.get("/users")
-    assert sorted(response.json()["users"], key=lambda item: item['user_id']) == [
+    assert sorted(response.json()["users"], key=lambda item: item["user_id"]) == [
         user_mock.copy(update={"user_id": 1}),
         user_mock.copy(update={"user_id": 2}),
     ]
