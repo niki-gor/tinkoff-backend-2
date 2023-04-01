@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from loguru import logger
 
 from forum.routes import router
 from forum.core.lifespan import lifespan

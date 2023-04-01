@@ -11,6 +11,8 @@ services:
     environment:
       SECRET_KEY: test
       DSN: postgresql://test:test@test-db/forum
+      MIN_CONNECTION_COUNT: 1
+      MAX_CONNECTION_COUNT: 1
     networks:
       - test-db-network
 

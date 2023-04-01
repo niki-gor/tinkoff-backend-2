@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from forum.db.events import close_db_connection, connect_to_db
+from forum.db.connection import close_db_connection, connect_to_db
 from forum.dependencies.settings import get_app_settings
 
 

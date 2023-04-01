@@ -11,6 +11,8 @@ services:
     environment:
       SECRET_KEY: lol
       DSN: postgresql://myuser:mypassword@db/forum
+      MIN_CONNECTION_COUNT: 5
+      MAX_CONNECTION_COUNT: 10
     networks:
       - db-network
 
