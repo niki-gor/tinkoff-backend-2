@@ -1,16 +1,3 @@
--- name: create_users_table#
-drop table if exists
-    users;
-create table
-    users (
-        user_id serial primary key,
-        name text,
-        about text,
-        age integer,
-        email text,
-        hashed_password text
-    );
-
 -- name: create_user<!
 insert into
     users(

@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  test-api:
+    depends_on:
+      - test-db
+    build:
+      context: .
+      dockerfile: Dockerfile.test.api
+    ports:
+      - 8082:8081
+    restart: always
+    environment:
+      SECRET_KEY: test
+      DSN: postgresql://test:test@test-db/forum
+    networks:
+      - test-db-network
+    
+  test-db:
+    build: 
+      context: .
+      dockerfile: Dockerfile.db
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: forum
+    ports:
+      - 5433:5432
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    networks:
+      - test-db-network
+
+networks:
+  test-db-network:
+
+volumes:
+  test-db-data:

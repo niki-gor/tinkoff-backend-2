@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from loguru import logger
 
 from forum.core.settings import AppSettings
-from forum.db.queries import queries
 from forum.db.events import close_db_connection, connect_to_db
 
 
@@ -14,9 +13,6 @@ def create_start_app_handler(
 ) -> Callable:  # type: ignore
     async def start_app() -> None:
         await connect_to_db(app, settings)
-        async with app.state.pool.acquire() as conn:
-            await queries.create_users_table(conn)
-            await queries.create_friends_table(conn)
 
     return start_app
 

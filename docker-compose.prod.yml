@@ -1,18 +1,24 @@
-version: '3'
+version: '3.8'
 services:
   api:
     depends_on:
       - db
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod.api
     ports:
       - 8081:8081
     restart: always
     environment:
       SECRET_KEY: lol
       DSN: postgresql://myuser:mypassword@db/forum
+    networks:
+      - db-network
   
   db:
-    image: postgres:14
+    build: 
+      context: .
+      dockerfile: Dockerfile.db
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
@@ -21,6 +27,11 @@ services:
       - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - db-network
+
+networks:
+  db-network:
 
 volumes:
   db-data:
