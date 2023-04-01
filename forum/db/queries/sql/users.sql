@@ -1,0 +1,51 @@
+-- name: create_users_table#
+drop table if exists
+    users;
+create table
+    users (
+        user_id serial primary key,
+        name text,
+        about text,
+        age integer,
+        email text,
+        hashed_password text
+    );
+
+-- name: create_user<!
+insert into
+    users(
+        name, about, age, email, hashed_password
+    )
+values
+    (:name, :about, :age, :email, :hashed_password)
+returning
+    user_id;
+
+
+-- name: get_all_users
+select
+    user_id, name, about, age, email
+from
+    users;
+
+
+-- name: get_user_by_id^
+select
+    user_id, name, about, age, email, hashed_password
+from
+    users
+where
+    user_id = :user_id;
+
+
+-- name: update_user_by_id!
+update
+    users
+set
+    name     = :name,
+    about    = :about,
+    age      = :age,
+    email    = :email,
+    hashed_password = :hashed_password
+where
+    user_id = :user_id;

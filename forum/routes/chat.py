@@ -1,28 +1,14 @@
-import statistics
 from typing import List
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    FastAPI,
-    status,
-    HTTPException,
-    Response,
-    WebSocket,
-    WebSocketDisconnect,
-)
-from fastapi.responses import HTMLResponse
-
-
+from fastapi import (APIRouter, Depends, HTTPException, Request, WebSocket,
+                     WebSocketDisconnect, status)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi import FastAPI, Request
 
 from forum.dependencies.authentication import authenticate_user_id
+from forum.dependencies.database import get_friends_repo
 from forum.repositories.base import BaseFriendsRepository
 from forum.resources import strings
-from forum.dependencies.database import friendships_repo
-
 
 router = APIRouter()
 
@@ -56,7 +42,7 @@ async def get_chat(
     user_id: int,
     to_id: int,
     auth_user_id: int = Depends(authenticate_user_id),
-    friends: BaseFriendsRepository = Depends(friendships_repo),
+    friends: BaseFriendsRepository = Depends(get_friends_repo),
 ):
     if user_id != auth_user_id:
         raise HTTPException(

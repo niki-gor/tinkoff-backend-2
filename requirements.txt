@@ -1,5 +1,7 @@
+aiosql==8.0
 anyio==3.6.2
 arrow==1.2.3
+asyncpg==0.27.0
 attrs==22.2.0
 bcrypt==4.0.1
 binaryornot==0.4.4
@@ -21,7 +23,9 @@ idna==3.4
 iniconfig==2.0.0
 Jinja2==3.1.2
 jinja2-time==0.2.0
+loguru==0.6.0
 MarkupSafe==2.1.2
+mypy==1.1.1
 mypy-extensions==1.0.0
 packaging==23.0
 passlib==1.7.4

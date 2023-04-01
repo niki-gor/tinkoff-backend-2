@@ -2,12 +2,17 @@ from forum.models.domain import User, UserInDB
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
 
 
-class MemoryUsersRepository(BaseUsersRepository):
+class MemoryRepository:
+    def __call__(self):
+        return self
+
+
+class MemoryUsersRepository(MemoryRepository, BaseUsersRepository):
     def __init__(self):
         self.users: dict[int, UserInDB] = {}
         self.next_id = 1
 
-    async def insert(
+    async def create_user(
         self, *, name: str, about: str, age: int, email: str, password: str
     ) -> int:
         user = UserInDB(
@@ -20,18 +25,18 @@ class MemoryUsersRepository(BaseUsersRepository):
         finally:
             self.next_id += 1
 
-    async def select_all(self) -> list[User]:
+    async def get_all_users(self) -> list[User]:
         return [
             User(**user_with_passwd.dict()) for user_with_passwd in self.users.values()
         ]
 
-    async def select_by_id(self, user_id: int) -> UserInDB | None:
+    async def get_user_by_id(self, user_id: int) -> UserInDB | None:
         try:
             return self.users[user_id]
         except KeyError:
             return None
 
-    async def update(
+    async def update_user_by_id(
         self,
         *,
         user_id: int,
@@ -57,11 +62,11 @@ class MemoryUsersRepository(BaseUsersRepository):
         return True
 
 
-class MemoryFriendsRepository(BaseFriendsRepository):
+class MemoryFriendsRepository(MemoryRepository, BaseFriendsRepository):
     def __init__(self):
         self.friendships: set[tuple] = set()
 
-    async def insert(self, from_id: int, to_id: int) -> bool:
+    async def create_friends(self, from_id: int, to_id: int) -> bool:
         friendship = tuple([from_id, to_id])
         if friendship in self.friendships:
             return False

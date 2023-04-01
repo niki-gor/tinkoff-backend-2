@@ -1,17 +1,26 @@
 version: '3'
 services:
   api:
-    image: nikigor/forum
-    container_name: forum_api
+    depends_on:
+      - db
+    build: .
     ports:
       - 8081:8081
     restart: always
-
-  api_2:
-    image: nikigor/forum
-    container_name: forum_api_2
-    profiles:
-      - double_api
+    environment:
+      SECRET_KEY: lol
+      DSN: postgresql://myuser:mypassword@db/forum
+  
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: forum
     ports:
-      - 8082:8081
-    restart: always
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
