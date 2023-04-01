@@ -1,6 +1,5 @@
 .PHONY: run
-run:
-	docker compose -f docker-compose.prod.yml up -d
+run: up
 
 .PHONY: install
 install:

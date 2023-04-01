@@ -2,7 +2,7 @@ create database forum;
 
 \c forum;
 
-create table if not exists
+create table
     users (
         user_id serial primary key,
         name text,
@@ -12,7 +12,7 @@ create table if not exists
         hashed_password text
     );
 
-create table if not exists
+create table
     friends (
         from_id integer not null,
         to_id integer not null,
