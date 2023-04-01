@@ -3,9 +3,7 @@ run: up
 
 .PHONY: install
 install:
-	python3.11 -m venv venv
-	. venv/bin/activate
-	pip install -r requirements.txt
+	docker compose -f docker-compose.prod.yml build --no-cache
 
 .PHONY: lint
 lint:
