@@ -1,5 +1,4 @@
 from asyncpg import Connection
-from loguru import logger
 
 from forum.db.queries import queries
 from forum.models.domain import User, UserInDB
@@ -21,7 +20,7 @@ class DatabaseUsersRepository(BaseUsersRepository):
             about=user.about,
             age=user.age,
             email=user.email,
-            hashed_password=user.hashed_password
+            hashed_password=user.hashed_password,
         )
         return user_id
 

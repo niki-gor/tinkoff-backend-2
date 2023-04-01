@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from forum.routes import friends, users, auth, chat
+from forum.routes import auth, chat, friends, users
 
 router = APIRouter()
 router.include_router(users.router, prefix="/users")

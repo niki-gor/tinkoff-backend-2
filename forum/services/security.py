@@ -1,11 +1,12 @@
-import logging
 import bcrypt
 
-PEPPER = "LOL"
+from forum.dependencies.settings import get_app_settings
 
 
 def make_peppered(plain_password: str):
-    return plain_password + PEPPER
+    settings = get_app_settings()
+    pepper = settings.secret_key
+    return plain_password + pepper
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

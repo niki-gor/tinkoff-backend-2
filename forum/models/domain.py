@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from forum.services import security
 
 

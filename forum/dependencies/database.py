@@ -2,8 +2,10 @@ from typing import AsyncGenerator
 
 from asyncpg import Connection, Pool
 from fastapi import Depends, Request
+
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
-from forum.repositories.database import DatabaseFriendsRepository, DatabaseUsersRepository
+from forum.repositories.database import (DatabaseFriendsRepository,
+                                         DatabaseUsersRepository)
 
 
 def get_db_pool(request: Request) -> Pool:
@@ -17,12 +19,17 @@ async def get_connection_from_pool(
         yield conn
 
 
-def get_users_repo(conn: Connection = Depends(get_connection_from_pool)):
+def get_users_repo(
+    conn: Connection = Depends(get_connection_from_pool),
+) -> BaseUsersRepository:
     return DatabaseUsersRepository(conn)
 
 
-def get_friends_repo(conn: Connection = Depends(get_connection_from_pool)):
+def get_friends_repo(
+    conn: Connection = Depends(get_connection_from_pool),
+) -> BaseFriendsRepository:
     return DatabaseFriendsRepository(conn)
+
 
 # @lru_cache
 # def get_friends_repo():

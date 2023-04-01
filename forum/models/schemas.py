@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, StrictStr, validator
+from pydantic import BaseModel, EmailStr, validator
 
-from forum.models.domain import User
 from forum.models import validators
+from forum.models.domain import User
 
 
 class UserWithToken(User):

@@ -8,8 +8,7 @@ from forum.db.events import close_db_connection, connect_to_db
 
 
 def create_start_app_handler(
-    app: FastAPI,
-    settings: AppSettings
+    app: FastAPI, settings: AppSettings
 ) -> Callable:  # type: ignore
     async def start_app() -> None:
         await connect_to_db(app, settings)

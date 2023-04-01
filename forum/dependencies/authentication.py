@@ -1,9 +1,9 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from forum.services import jwt
 from forum.core.settings import AppSettings
 from forum.dependencies.settings import get_app_settings
+from forum.services import jwt
 
 
 async def authenticate_user_id(

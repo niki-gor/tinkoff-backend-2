@@ -4,12 +4,9 @@ from loguru import logger
 
 from forum.core.settings import AppSettings
 from forum.db import queries
-from forum.dependencies.database import get_connection_from_pool
 
 
-async def connect_to_db(
-    app: FastAPI, settings: AppSettings
-) -> None:
+async def connect_to_db(app: FastAPI, settings: AppSettings) -> None:
     logger.info("Connecting to PostgreSQL")
 
     app.state.pool = await asyncpg.create_pool(

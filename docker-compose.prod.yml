@@ -14,9 +14,9 @@ services:
       DSN: postgresql://myuser:mypassword@db/forum
     networks:
       - db-network
-  
+
   db:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.db
     environment:
@@ -32,6 +32,7 @@ services:
 
 networks:
   db-network:
+
 
 volumes:
   db-data:

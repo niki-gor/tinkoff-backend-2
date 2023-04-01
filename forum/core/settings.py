@@ -1,4 +1,4 @@
-from pydantic import PostgresDsn, SecretStr, BaseSettings
+from pydantic import BaseSettings, PostgresDsn, SecretStr
 
 
 class AppSettings(BaseSettings):

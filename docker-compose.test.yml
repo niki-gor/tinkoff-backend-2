@@ -14,9 +14,9 @@ services:
       DSN: postgresql://test:test@test-db/forum
     networks:
       - test-db-network
-    
+
   test-db:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.db
     environment:
@@ -32,6 +32,7 @@ services:
 
 networks:
   test-db-network:
+
 
 volumes:
   test-db-data:

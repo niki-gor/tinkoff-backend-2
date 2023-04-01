@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from forum.models.domain import User, UserInDB
 
 
-class BaseUsersRepository:
+class BaseUsersRepository(ABC):
     @abstractmethod
     async def create_user(
         self, *, name: str, about: str, age: int, email: str, password: str
@@ -32,7 +32,7 @@ class BaseUsersRepository:
         pass
 
 
-class BaseFriendsRepository:
+class BaseFriendsRepository(ABC):
     @abstractmethod
     async def create_friends(self, from_id: int, to_id: int) -> bool:
         pass
