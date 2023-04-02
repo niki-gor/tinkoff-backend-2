@@ -1,20 +1,21 @@
-import logging
 import bcrypt
 
-PEPPER = "LOL"
+from forum.dependencies.settings import get_app_settings
 
 
 def make_peppered(plain_password: str):
-    return plain_password + PEPPER
+    settings = get_app_settings()
+    pepper = settings.secret_key.get_secret_value()
+    return plain_password + pepper
 
 
-def verify_password(plain_password: str, hashed_password: bytes) -> bool:
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     peppered_password = make_peppered(plain_password)
-    return bcrypt.checkpw(peppered_password.encode(), hashed_password)
+    return bcrypt.checkpw(peppered_password.encode(), hashed_password.encode())
 
 
-def get_password_hash(plain_password: str) -> bytes:
+def get_password_hash(plain_password: str) -> str:
     peppered_password = make_peppered(plain_password)
     salt = bcrypt.gensalt(rounds=5)
     hashed_password = bcrypt.hashpw(peppered_password.encode(), salt)
-    return hashed_password
+    return hashed_password.decode()

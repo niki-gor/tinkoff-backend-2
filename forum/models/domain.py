@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from forum.services import security
 
 
@@ -11,7 +12,7 @@ class User(BaseModel):
 
 
 class UserInDB(User):
-    hashed_password: bytes = "".encode()
+    hashed_password: str = ""
 
     def check_password(self, plain_password: str) -> bool:
         return security.verify_password(plain_password, self.hashed_password)

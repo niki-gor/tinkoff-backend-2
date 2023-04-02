@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Dict
-from fastapi import HTTPException, status
 
 import jwt
+from fastapi import HTTPException, status
 from pydantic import ValidationError
 
 from forum.models.domain import User

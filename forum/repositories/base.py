@@ -3,28 +3,23 @@ from abc import ABC, abstractmethod
 from forum.models.domain import User, UserInDB
 
 
-class BaseRepository(ABC):
-    def __call__(self):
-        return self
-
-
-class BaseUsersRepository(BaseRepository):
+class BaseUsersRepository(ABC):
     @abstractmethod
-    async def insert(
+    async def create_user(
         self, *, name: str, about: str, age: int, email: str, password: str
     ) -> int:
         pass
 
     @abstractmethod
-    async def select_all(self) -> list[User]:
+    async def get_all_users(self) -> list[User]:
         pass
 
     @abstractmethod
-    async def select_by_id(self, user_id: int) -> UserInDB | None:
+    async def get_user_by_id(self, user_id: int) -> UserInDB | None:
         pass
 
     @abstractmethod
-    async def update(
+    async def update_user_by_id(
         self,
         *,
         user_id: int,
@@ -37,9 +32,9 @@ class BaseUsersRepository(BaseRepository):
         pass
 
 
-class BaseFriendsRepository(BaseRepository):
+class BaseFriendsRepository(ABC):
     @abstractmethod
-    async def insert(self, from_id: int, to_id: int) -> bool:
+    async def create_friends(self, from_id: int, to_id: int) -> bool:
         pass
 
     @abstractmethod
