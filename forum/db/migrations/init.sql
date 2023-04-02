@@ -1,7 +1,3 @@
-create database forum;
-
-\c forum;
-
 create table
     users (
         user_id serial primary key,

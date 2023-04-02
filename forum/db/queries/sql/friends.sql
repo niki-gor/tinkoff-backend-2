@@ -1,6 +1,8 @@
 -- name: create_friends<!
 insert into
-    friends
+    friends(
+        from_id, to_id
+    )
 values
     (:from_id, :to_id)
 on conflict

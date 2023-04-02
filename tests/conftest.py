@@ -23,7 +23,7 @@ async def app() -> FastAPI:
     app = get_application()
     async with LifespanManager(app):
         async with app.state.pool.acquire() as conn:
-            await conn.execute("TRUNCATE TABLE friends, users RESTART IDENTITY;")
+            await conn.execute("TRUNCATE TABLE users, friends RESTART IDENTITY;")
         yield app
 
 

@@ -10,29 +10,23 @@ services:
     restart: always
     environment:
       SECRET_KEY: test
-      DSN: postgresql://test:test@test-db/forum
+      DSN: postgresql://test:test@test-db:5432/forum
       MIN_CONNECTION_COUNT: 1
       MAX_CONNECTION_COUNT: 1
     networks:
       - test-db-network
 
   test-db:
-    build:
-      context: forum/db
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: forum
-    ports:
-      - 5433:5432
     volumes:
-      - test-db-data:/var/lib/postgresql/data
+      - ./forum/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - test-db-network
 
 networks:
   test-db-network:
-
-
-volumes:
-  test-db-data:
+    

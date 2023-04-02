@@ -10,25 +10,25 @@ services:
     restart: always
     environment:
       SECRET_KEY: lol
-      DSN: postgresql://myuser:mypassword@db/forum
+      DSN: postgresql://myuser:mypassword@db:5432/forum
       MIN_CONNECTION_COUNT: 5
       MAX_CONNECTION_COUNT: 10
     networks:
       - db-network
 
   db:
-    build:
-      context: forum/db
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: forum
-    ports:
-      - 5432:5432
     volumes:
+      - ./forum/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db-data:/var/lib/postgresql/data
     networks:
       - db-network
+    ports:
+      - 5432:5432
 
 networks:
   db-network:
