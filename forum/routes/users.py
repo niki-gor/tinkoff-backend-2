@@ -62,8 +62,8 @@ async def edit_user(
             detail=strings.INSUFFICIENT_PERMISSIONS,
         )
 
-    ok = await users.update_user_by_id(user_id=user_id, **user_info.dict())
-    if not ok:
+    updated = await users.update_user_by_id(user_id=user_id, **user_info.dict())
+    if not updated:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=strings.USER_NOT_FOUND
         )

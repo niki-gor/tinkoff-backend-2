@@ -1,8 +1,10 @@
 from asyncpg import Connection
+import asyncpg
 
 from forum.db.queries import queries
 from forum.models.domain import User, UserInDB
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
+from forum.resources import strings
 
 
 class DatabaseUsersRepository(BaseUsersRepository):
@@ -63,9 +65,13 @@ class DatabaseFriendsRepository(BaseFriendsRepository):
     def __init__(self, conn: Connection):
         self.conn = conn
 
-    async def create_friends(self, from_id: int, to_id: int) -> bool:
-        created = await queries.create_friends(self.conn, from_id=from_id, to_id=to_id)
-        return created is not None
+    async def create_friends(self, from_id: int, to_id: int):
+        try:
+            await queries.create_friends(self.conn, from_id=from_id, to_id=to_id)
+        except asyncpg.exceptions.UniqueViolationError:
+            raise ValueError(strings.ALREADY_FRIENDS)
+        except asyncpg.exceptions.ForeignKeyViolationError:
+            raise ValueError(strings.USER_NOT_FOUND)
 
     async def are_friends(self, first_id: int, second_id: int) -> bool:
         indeed = await queries.are_friends(

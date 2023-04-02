@@ -4,11 +4,8 @@ insert into
         from_id, to_id
     )
 values
-    (:from_id, :to_id)
-on conflict
-    do nothing
-returning
-    1;
+    (:from_id, :to_id);
+
 
 -- name: are_friends$
 select
