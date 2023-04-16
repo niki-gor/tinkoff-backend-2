@@ -5,7 +5,8 @@ create table
         about text,
         age integer,
         email text,
-        hashed_password text
+        hashed_password text,
+        last_login_at text
     );
 
 create table

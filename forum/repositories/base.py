@@ -6,7 +6,7 @@ from forum.models.domain import User, UserInDB
 class BaseUsersRepository(ABC):
     @abstractmethod
     async def create_user(
-        self, *, name: str, about: str, age: int, email: str, password: str
+        self, *, name: str, about: str, age: int, email: str, password: str, last_login_at: str
     ) -> int:
         pass
 
@@ -22,12 +22,13 @@ class BaseUsersRepository(ABC):
     async def update_user_by_id(
         self,
         *,
-        user_id: int,
-        name: str,
-        about: str,
-        age: int,
-        email: str,
-        password: str
+        user_id: int = None,
+        name: str = None,
+        about: str = None,
+        age: int = None,
+        email: str = None,
+        password: str = None,
+        last_login_at: str = None
     ) -> bool:
         pass
 
