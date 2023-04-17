@@ -13,7 +13,8 @@ create table
     friends (
         from_id integer not null,
         to_id integer not null,
-        unique (from_id, to_id),
+        accepted_at text,
+        unique(from_id, to_id),
         foreign key (from_id) references users(user_id) on delete cascade,
         foreign key (to_id) references users(user_id) on delete cascade
     );

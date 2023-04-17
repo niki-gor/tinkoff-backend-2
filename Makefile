@@ -24,4 +24,7 @@ down:
 test:
 	docker compose -f docker-compose.test.yml run --build --rm test-api pytest
 	docker compose -f docker-compose.test.yml down --volumes
-	
+
+.PHONY: clean-test
+clean-test:
+	docker compose -f docker-compose.test.yml down --volumes

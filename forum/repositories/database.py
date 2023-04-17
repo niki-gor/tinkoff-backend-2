@@ -1,3 +1,4 @@
+from datetime import datetime
 from asyncpg import Connection
 import asyncpg
 
@@ -70,7 +71,12 @@ class DatabaseFriendsRepository(BaseFriendsRepository):
 
     async def create_friends(self, from_id: int, to_id: int):
         try:
-            await queries.create_friends(self.conn, from_id=from_id, to_id=to_id)
+            created = await queries.create_friends(self.conn, from_id=from_id, to_id=to_id)
+            if not created:
+                now = datetime.now().isoformat()
+                updated = await queries.accept_friends(self.conn, from_id=from_id, to_id=to_id, accepted_at=now)
+                if not updated:
+                    raise ValueError(strings.ALREADY_FRIENDS)
         except asyncpg.exceptions.UniqueViolationError:
             raise ValueError(strings.ALREADY_FRIENDS)
         except asyncpg.exceptions.ForeignKeyViolationError:

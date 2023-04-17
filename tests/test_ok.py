@@ -2,9 +2,11 @@ from copy import deepcopy
 
 import pytest
 from fastapi import status
+from loguru import logger
 
 from forum.models.schemas import UserCredentials
-from tests.conftest import get_authorization_headers, user_mock, user_mock_passwd
+from tests.conftest import (get_authorization_headers, user_mock,
+                            user_mock_passwd)
 
 pytestmark = pytest.mark.asyncio
 
