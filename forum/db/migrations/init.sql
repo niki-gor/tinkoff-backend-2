@@ -18,3 +18,10 @@ create table
         foreign key (from_id) references users(user_id) on delete cascade,
         foreign key (to_id) references users(user_id) on delete cascade
     );
+
+create index 
+    idx_friends_from_to 
+on 
+    friends (
+        from_id, to_id
+    );
