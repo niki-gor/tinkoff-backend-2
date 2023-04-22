@@ -14,7 +14,7 @@ user_mock = User(
     about="literally nothing",
     age=42,
     email="lol@example.com",
-    last_login_at='2023'
+    last_login_at="2023",
 )
 user_mock_passwd = UserInCreate(**user_mock.dict(), password="123QQQqqq")
 

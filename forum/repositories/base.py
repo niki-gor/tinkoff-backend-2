@@ -6,7 +6,14 @@ from forum.models.domain import User, UserInDB
 class BaseUsersRepository(ABC):
     @abstractmethod
     async def create_user(
-        self, *, name: str, about: str, age: int, email: str, password: str, last_login_at: str
+        self,
+        *,
+        name: str,
+        about: str,
+        age: int,
+        email: str,
+        password: str,
+        last_login_at: str
     ) -> int:
         pass
 
@@ -40,4 +47,8 @@ class BaseFriendsRepository(ABC):
 
     @abstractmethod
     async def are_friends(self, first_id: int, second_id: int) -> bool:
+        pass
+
+    @abstractmethod
+    async def get_friends(self, user_id: int) -> list[User]:
         pass

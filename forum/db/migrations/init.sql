@@ -14,14 +14,17 @@ create table
         from_id integer not null,
         to_id integer not null,
         accepted_at text,
+        
         unique(from_id, to_id),
         foreign key (from_id) references users(user_id) on delete cascade,
         foreign key (to_id) references users(user_id) on delete cascade
     );
 
 create index 
-    idx_friends_from_to 
-on 
-    friends (
-        from_id, to_id
-    );
+	idx_to_id
+on
+	friends (
+		to_id
+	)
+where 
+	accepted_at is not null;

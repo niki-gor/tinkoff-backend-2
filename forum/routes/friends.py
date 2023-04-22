@@ -3,6 +3,7 @@ from fastapi.exceptions import HTTPException
 
 from forum.dependencies.authentication import authenticate_user_id
 from forum.dependencies.database import get_friends_repo
+from forum.models.schemas import ListOfUsersInResponse
 from forum.repositories.base import BaseFriendsRepository
 from forum.resources import strings
 
@@ -33,3 +34,11 @@ async def befriend(
             strings.ALREADY_FRIENDS: status.HTTP_400_BAD_REQUEST,
         }
         raise HTTPException(status_code=codes[str(e)], detail=str(e))
+
+
+@router.get("", response_model=ListOfUsersInResponse)
+async def get_friends(
+    user_id: int, friendships: BaseFriendsRepository = Depends(get_friends_repo)
+) -> ListOfUsersInResponse:
+    friends = await friendships.get_friends(user_id)
+    return ListOfUsersInResponse(users=friends)
