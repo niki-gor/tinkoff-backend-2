@@ -23,7 +23,7 @@ jobs:
           make lint
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          (git commit -am "Apply black lint to Python code" && git push) || echo "Everything is fine, nothing to change"
+          (git commit -am "Apply black lint to Python code" && git push origin HEAD:$(basename ${{ github.ref }})) || echo "Everything is fine, nothing to change"
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
 
