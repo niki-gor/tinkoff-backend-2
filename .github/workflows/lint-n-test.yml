@@ -18,9 +18,14 @@ jobs:
         run: |
           pip install black
 
-      - name: Run linter
+      - name: Run and apply linter
         run: |
           make lint
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git commit -am "Apply black lint to Python code" && git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
