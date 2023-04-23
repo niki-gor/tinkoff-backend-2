@@ -6,7 +6,36 @@ from forum.dependencies.database import get_friends_repo, get_users_repo
 from forum.models.schemas import ListOfUsersInResponse
 from forum.repositories.base import BaseFriendsRepository, BaseUsersRepository
 from forum.resources import strings
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from forum.routes.users import validate_user_id
+
+
+
+
+
+
+
 
 router = APIRouter()
 
