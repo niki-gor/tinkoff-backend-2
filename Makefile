@@ -28,3 +28,12 @@ test:
 .PHONY: clear
 clear:
 	docker compose -f docker-compose.test.yml down --volumes	
+
+.PHONY: upgrade
+upgrade:
+	alembic upgrade $(VERSION)
+
+.PHONY: downgrade
+downgrade:
+	alembic downgrade $(VERSION)
+	

@@ -1,8 +1,8 @@
-### Первый запуск запроса ###
-<img src="https://i.ibb.co/Qd9QGH9/Screenshot-from-2023-04-23-01-21-29.png"></img>
-
-### Второй запуск того же самого запроса (закэширован) ###
-<img src="https://i.ibb.co/QK7j2tm/Screenshot-from-2023-04-23-01-21-40.png"></img>
+Я применил миграцию, не модифицируя саму таблицу. Для этого я использовал команду
+```
+alembic stamp head
+```
+<img src="https://i.ibb.co/w7yTjZ6/Screenshot-from-2023-04-23-17-56-38.png"></img>
 
 
 Сервер работает на порту <code>8081</code>
