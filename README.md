@@ -1,7 +1,3 @@
-Я применил миграцию, не модифицируя саму таблицу. Для этого я использовал команду
-```
-alembic stamp head
-```
 <img src="https://i.ibb.co/w7yTjZ6/Screenshot-from-2023-04-23-17-56-38.png"></img>
 
 
