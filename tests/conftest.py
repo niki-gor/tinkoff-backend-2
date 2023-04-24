@@ -3,10 +3,13 @@ from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
 
+from alembic import command
+from alembic.config import Config
 from forum.core.app import get_application  # local import for testing purpose
 from forum.models.domain import User
 from forum.models.schemas import UserCredentials, UserInCreate
 
+alembic_config = Config("alembic.test.ini")
 
 user_mock = User(
     user_id=-1,
@@ -22,10 +25,10 @@ user_mock_passwd = UserInCreate(**user_mock.dict(), password="123QQQqqq")
 @pytest_asyncio.fixture(scope="function")
 async def app() -> FastAPI:
     app = get_application()
+    command.upgrade(alembic_config, "head")
     async with LifespanManager(app):
-        async with app.state.pool.acquire() as conn:
-            await conn.execute("TRUNCATE TABLE users, friends RESTART IDENTITY;")
         yield app
+    command.downgrade(alembic_config, "base")
 
 
 @pytest_asyncio.fixture(scope="function")
