@@ -3,8 +3,7 @@ services:
   api:
     depends_on:
       - db
-    build:
-      dockerfile: Dockerfile.prod
+    build: .
     ports:
       - 8081:8081
     restart: always
@@ -15,6 +14,7 @@ services:
       MAX_CONNECTION_COUNT: 10
     networks:
       - db-network
+    command: sh -c 'alembic upgrade head && python -m forum'
 
   db:
     image: postgres:14-alpine
@@ -23,7 +23,6 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: forum
     volumes:
-      - ./forum/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db-data:/var/lib/postgresql/data
     networks:
       - db-network
@@ -32,7 +31,6 @@ services:
 
 networks:
   db-network:
-
 
 volumes:
   db-data:

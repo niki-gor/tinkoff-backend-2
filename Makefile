@@ -3,7 +3,7 @@ run: up
 
 .PHONY: install
 install:
-	docker compose -f docker-compose.prod.yml build --no-cache
+	docker compose build
 
 .PHONY: lint
 lint:
@@ -15,10 +15,10 @@ swagger:
 
 .PHONY: up
 up:
-	docker compose -f docker-compose.prod.yml up -d
+	docker compose up -d
 .PHONY: down
 down:
-	docker compose -f docker-compose.prod.yml down
+	docker compose down
 
 .PHONY: test
 test:
@@ -28,3 +28,12 @@ test:
 .PHONY: clear
 clear:
 	docker compose -f docker-compose.test.yml down --volumes	
+
+.PHONY: upgrade
+upgrade:
+	alembic upgrade $(VERSION)
+
+.PHONY: downgrade
+downgrade:
+	alembic downgrade $(VERSION)
+	

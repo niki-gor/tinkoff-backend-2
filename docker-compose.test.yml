@@ -3,8 +3,7 @@ services:
   test-api:
     depends_on:
       - test-db
-    build:
-      dockerfile: Dockerfile.test
+    build: .
     ports:
       - 8082:8081
     restart: always
@@ -22,8 +21,6 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: forum
-    volumes:
-      - ./forum/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - test-db-network
 
