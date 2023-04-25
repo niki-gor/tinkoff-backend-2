@@ -1,8 +1,8 @@
-### Первый запуск запроса ###
-<img src="https://i.ibb.co/Qd9QGH9/Screenshot-from-2023-04-23-01-21-29.png"></img>
+### Без индексов ###
+<img src="https://github.com/niki-gor/tinkoff-backend-2/blob/hw_05/screenshots/indexes/without.png?raw=true"></img>
 
-### Второй запуск того же самого запроса (закэширован) ###
-<img src="https://i.ibb.co/QK7j2tm/Screenshot-from-2023-04-23-01-21-40.png"></img>
+### С индексами ###
+<img src="https://github.com/niki-gor/tinkoff-backend-2/blob/hw_05/screenshots/indexes/with.png?raw=true"></img>
 
 
 Сервер работает на порту <code>8081</code>
