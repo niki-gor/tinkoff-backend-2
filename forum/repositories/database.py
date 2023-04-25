@@ -1,3 +1,4 @@
+from datetime import datetime
 from asyncpg import Connection
 import asyncpg
 
@@ -12,9 +13,23 @@ class DatabaseUsersRepository(BaseUsersRepository):
         self.conn = conn
 
     async def create_user(
-        self, *, name: str, about: str, age: int, email: str, password: str
+        self,
+        *,
+        name: str,
+        about: str,
+        age: int,
+        email: str,
+        password: str,
+        last_login_at: str
     ) -> int:
-        user = UserInDB(user_id=0, name=name, about=about, age=age, email=email)
+        user = UserInDB(
+            user_id=0,
+            name=name,
+            about=about,
+            age=age,
+            email=email,
+            last_login_at=last_login_at,
+        )
         user.change_password(password)
         user_id = await queries.create_user(
             self.conn,
@@ -23,6 +38,7 @@ class DatabaseUsersRepository(BaseUsersRepository):
             age=user.age,
             email=user.email,
             hashed_password=user.hashed_password,
+            last_login_at=user.last_login_at,
         )
         return user_id
 
@@ -45,7 +61,8 @@ class DatabaseUsersRepository(BaseUsersRepository):
         about: str | None = None,
         age: int | None = None,
         email: str | None = None,
-        password: str | None = None
+        password: str | None = None,
+        last_login_at: str | None = None
     ) -> bool:
         user = await queries.get_user_by_id(self.conn, user_id)
         if user is None:
@@ -57,6 +74,7 @@ class DatabaseUsersRepository(BaseUsersRepository):
         updated_user.email = email or updated_user.email
         if password:
             updated_user.change_password(password)
+        updated_user.last_login_at = last_login_at or updated_user.last_login_at
         await queries.update_user_by_id(self.conn, **updated_user.dict())
         return True
 
@@ -67,7 +85,16 @@ class DatabaseFriendsRepository(BaseFriendsRepository):
 
     async def create_friends(self, from_id: int, to_id: int):
         try:
-            await queries.create_friends(self.conn, from_id=from_id, to_id=to_id)
+            created = await queries.create_friends(
+                self.conn, from_id=from_id, to_id=to_id
+            )
+            if not created:
+                now = datetime.now().isoformat()
+                updated = await queries.accept_friends(
+                    self.conn, from_id=from_id, to_id=to_id, accepted_at=now
+                )
+                if not updated:
+                    raise ValueError(strings.ALREADY_FRIENDS)
         except asyncpg.exceptions.UniqueViolationError:
             raise ValueError(strings.ALREADY_FRIENDS)
         except asyncpg.exceptions.ForeignKeyViolationError:
@@ -78,3 +105,8 @@ class DatabaseFriendsRepository(BaseFriendsRepository):
             self.conn, first_id=first_id, second_id=second_id
         )
         return indeed
+
+    async def get_friends(self, user_id: int) -> list[User]:
+        friends_rows = await queries.get_friends(self.conn, user_id)
+        friends = [User(**row) for row in friends_rows]
+        return friends

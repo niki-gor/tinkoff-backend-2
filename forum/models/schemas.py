@@ -51,6 +51,7 @@ class UserInCreate(BaseModel):
     age: int
     email: EmailStr
     password: str
+    last_login_at: str
 
     @validator("name")
     def name_exists_not_too_long(cls, v):
@@ -75,6 +76,7 @@ class UserInUpdate(BaseModel):
     age: int | None = None
     email: EmailStr | None = None
     password: str | None = None
+    last_login_at: str | None = None
 
     @validator("name")
     def name_exists_not_too_long(cls, v):

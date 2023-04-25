@@ -15,13 +15,16 @@ swagger:
 
 .PHONY: up
 up:
-	docker compose -f docker-compose.prod.yml up --build -d
+	docker compose -f docker-compose.prod.yml up -d
 .PHONY: down
 down:
 	docker compose -f docker-compose.prod.yml down
 
 .PHONY: test
 test:
-	docker compose -f docker-compose.test.yml run --build --rm test-api pytest
+	docker compose -f docker-compose.test.yml run --build --rm test-api pytest -v
 	docker compose -f docker-compose.test.yml down --volumes
-	
+
+.PHONY: clear
+clear:
+	docker compose -f docker-compose.test.yml down --volumes	

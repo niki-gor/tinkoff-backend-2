@@ -9,6 +9,7 @@ class User(BaseModel):
     about: str
     age: int
     email: str
+    last_login_at: str
 
 
 class UserInDB(User):

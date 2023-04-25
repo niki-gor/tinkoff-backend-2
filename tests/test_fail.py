@@ -39,8 +39,13 @@ async def test_get_user_fail(client):
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == strings.USER_NOT_FOUND
 
-    response = await client.get("/users/async definitely_not_an_id")
+    response = await client.get("/users/definitely_not_an_id")
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    response = await client.get(
+        "/users/2341241243124312431"
+    )  # out of int32, which is used for user_id in DB
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 async def test_edit_user_fail(client):
@@ -117,3 +122,10 @@ async def test_chat_fail(client):
     response = await client.get("/users/1/chat/2", headers=headers)
     assert response.status_code == status.HTTP_403_FORBIDDEN
     assert response.json()["detail"] == strings.CHAT_ONLY_FRIENDS
+
+
+async def test_get_friends_fail(client):
+    response = await client.get("users/1/friends")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    response = await client.get("users/1341241234141241412445/friends")
+    assert response.status_code == status.HTTP_404_NOT_FOUND

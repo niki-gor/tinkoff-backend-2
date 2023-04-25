@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 
@@ -28,6 +29,9 @@ async def login(
         raise wrong_id_or_password
     if not user.check_password(credentials.password):
         raise wrong_id_or_password
+
+    now = datetime.now().isoformat()
+    await users.update_user_by_id(user_id=user.user_id, last_login_at=now)
 
     token = jwt.create_access_token_for_user(
         user,
