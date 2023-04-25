@@ -1,8 +1,8 @@
 ### Без индексов ###
-<img src="https://github.com/niki-gor/tinkoff-backend-2/blob/hw_05/screenshots/indexes/without.png?raw=true"></img>
+![without](screenshots/indexes/without.png)
 
 ### С индексами ###
-<img src="https://github.com/niki-gor/tinkoff-backend-2/blob/hw_05/screenshots/indexes/with.png?raw=true"></img>
+![with](screenshots/indexes/with.png)
 
 
 Сервер работает на порту <code>8081</code>
