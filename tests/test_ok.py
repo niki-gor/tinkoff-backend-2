@@ -16,21 +16,6 @@ async def test_create_user(client):
     assert response.json() == {"user_id": 1}
 
 
-async def test_get_all_users(client):
-    response = await client.get("/users")
-    assert response.json()["users"] == []
-    assert response.status_code == status.HTTP_200_OK
-
-    response = await client.post("/users", json=user_mock_passwd.dict())
-    response = await client.post("/users", json=user_mock_passwd.dict())
-
-    response = await client.get("/users")
-    assert sorted(response.json()["users"], key=lambda item: item["user_id"]) == [
-        user_mock.copy(update={"user_id": 1}),
-        user_mock.copy(update={"user_id": 2}),
-    ]
-
-
 async def test_get_user(client):
     response = await client.post("/users", json=user_mock_passwd.dict())
 

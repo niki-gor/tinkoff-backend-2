@@ -5,7 +5,6 @@ from forum.dependencies.authentication import authenticate_user_id
 from forum.dependencies.database import get_users_repo
 from forum.models.domain import User
 from forum.models.schemas import (
-    ListOfUsersInResponse,
     UserIdInResponse,
     UserInCreate,
     UserInResponse,
@@ -32,14 +31,6 @@ async def create_user(
 ) -> UserIdInResponse:
     new_id = await users.create_user(**user_info.dict())
     return UserIdInResponse(user_id=new_id)
-
-
-@router.get("", response_model=ListOfUsersInResponse)
-async def get_all_users(
-    users: BaseUsersRepository = Depends(get_users_repo),
-) -> ListOfUsersInResponse:
-    all_users = await users.get_all_users()
-    return ListOfUsersInResponse(users=all_users)
 
 
 @router.get("/{user_id}", response_model=UserInResponse)
