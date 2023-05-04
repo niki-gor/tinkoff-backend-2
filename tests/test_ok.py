@@ -21,7 +21,9 @@ async def test_get_user(client):
 
     response = await client.get("/users/1")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["user"] == user_mock.copy(update={"user_id": 1})
+    body = response.json()['user']
+    body.pop('last_login_at')
+    assert body == user_mock.copy(update={"user_id": 1}, exclude=set(['last_login_at']))
 
 
 async def test_edit_user(client):

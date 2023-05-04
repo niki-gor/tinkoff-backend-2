@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.exceptions import HTTPException
 
@@ -29,7 +30,8 @@ async def create_user(
     user_info: UserInCreate,
     users: BaseUsersRepository = Depends(get_users_repo),
 ) -> UserIdInResponse:
-    new_id = await users.create_user(**user_info.dict())
+    now = str(datetime.now())
+    new_id = await users.create_user(**user_info.dict(), last_login_at=now)
     return UserIdInResponse(user_id=new_id)
 
 
